@@ -11,7 +11,7 @@ Tập hợp 5 bài tập thực hành dưới đây được thiết kế nhằm
 
 ---
 
-## BÀI 1: TÍNH KHOẢNG CÁCH EUCLIDEAN (Tọa độ, Lớp Math, Ép kiểu, Định dạng đầu ra)
+## BÀI 1: TÍNH KHOẢNG CÁCH EUCLIDEAN
 
 ### 1. Mục tiêu
 - Luyện tập nhập xuất dữ liệu từ bàn phím bằng `Scanner`.
@@ -35,43 +35,9 @@ Kết quả in ra màn hình phải được làm tròn chính xác đến **2 c
   ```text
   Khoảng cách giữa hai điểm A và B là: 2.83
   ```
-
-### 4. Gợi ý & Cảnh báo bẫy
-- **Bẫy ép kiểu:** Kết quả của hiệu tọa độ sau khi bình phương cần đảm bảo được truyền vào hàm của `Math` dưới dạng số thực (`double`) để tránh lỗi mất mát dữ liệu hoặc lỗi kiểu dữ liệu.
-- Định dạng xuất: Sử dụng định dạng `%.2f` và ký tự xuống dòng chuẩn `%n` trong `printf()`.
-
-### 5. Khung mã nguồn gợi ý
-```java
-import java.util.Scanner;
-
-public class PointDistance {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Nhập x1: ");
-        int x1 = Integer.parseInt(scanner.nextLine());
-
-        System.out.print("Nhập y1: ");
-        int y1 = Integer.parseInt(scanner.nextLine());
-
-        System.out.print("Nhập x2: ");
-        int x2 = Integer.parseInt(scanner.nextLine());
-
-        System.out.print("Nhập y2: ");
-        int y2 = Integer.parseInt(scanner.nextLine());
-
-        // Viết code tính toán khoảng cách ở đây
-        // ...
-
-        // In kết quả có định dạng
-        // System.out.printf("...", ...);
-    }
-}
-```
-
 ---
 
-## BÀI 2: PHÂN LOẠI TAM GIÁC & TÍNH DIỆN TÍCH (Điều kiện, Toán tử logic, Ép kiểu)
+## BÀI 2: PHÂN LOẠI TAM GIÁC & TÍNH DIỆN TÍCH
 
 ### 1. Mục tiêu
 - Sử dụng các toán tử logic (`&&`, `||`, `!`) và cấu trúc điều kiện `if - else if - else`.
@@ -101,35 +67,9 @@ Viết chương trình nhập vào 3 số nguyên dương $a, b, c$ từ bàn ph
   Diện tích: 6.00
   ```
 
-### 4. Gợi ý & Cảnh báo bẫy
-- **Bẫy chia số nguyên:** Công thức tính nửa chu vi $p = (a+b+c)/2$ sẽ bị mất phần thập phân nếu $a+b+c$ là số lẻ (ví dụ: $3+4+6 = 13$, $13/2$ trong Java sẽ ra $6.0$ thay vì $6.5$). Hãy ép kiểu hoặc thực hiện chia số thực: `double p = (a + b + c) / 2.0;`.
-
-### 5. Khung mã nguồn gợi ý
-```java
-import java.util.Scanner;
-
-public class TriangleClassifier {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Nhập cạnh a: ");
-        int a = Integer.parseInt(scanner.nextLine());
-
-        System.out.print("Nhập cạnh b: ");
-        int b = Integer.parseInt(scanner.nextLine());
-
-        System.out.print("Nhập cạnh c: ");
-        int c = Integer.parseInt(scanner.nextLine());
-
-        // Kiểm tra điều kiện và thực hiện logic phân loại, tính toán
-        // ...
-    }
-}
-```
-
 ---
 
-## BÀI 3: KIỂM TRA MẬT KHẨU HỢP LỆ (Vòng lặp, Xử lý ký tự, Biến cờ hiệu)
+## BÀI 3: KIỂM TRA MẬT KHẨU HỢP LỆ
 
 ### 1. Mục tiêu
 - Sử dụng vòng lặp `for` kết hợp cấu trúc điều kiện `if`.
@@ -164,50 +104,9 @@ Hãy thông báo cụ thể mật khẩu có hợp lệ hay không. Nếu không
   - Mật khẩu phải chứa ít nhất 1 chữ cái viết hoa.
   ```
 
-### 4. Gợi ý & Cảnh báo bẫy
-- Sử dụng phương thức `charAt(i)` để lấy ký tự tại vị trí chỉ số `i` trong chuỗi.
-- Ký tự kiểu `char` có thể so sánh trực tiếp bằng các toán tử so sánh thông thường: ví dụ `c >= '0' && c <= '9'` để kiểm tra ký tự số, và `c >= 'A' && c <= 'Z'` để kiểm tra ký tự viết hoa.
-- Nhớ thực hiện `password = password.trim()` trước khi kiểm tra độ dài.
-
-### 5. Khung mã nguồn gợi ý
-```java
-import java.util.Scanner;
-
-public class PasswordValidator {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Nhập mật khẩu: ");
-        String password = scanner.nextLine();
-
-        // 1. Cắt khoảng trắng thừa
-        String cleanedPassword = password.trim();
-        int length = cleanedPassword.length();
-
-        // 2. Khai báo các biến cờ hiệu logic
-        boolean hasDigit = false;
-        boolean hasUpper = false;
-
-        // 3. Sử dụng vòng lặp duyệt qua từng ký tự
-        for (int i = 0; i < length; i++) {
-            char c = cleanedPassword.charAt(i);
-            if (c >= '0' && c <= '9') {
-                hasDigit = true;
-            }
-            if (c >= 'A' && c <= 'Z') {
-                hasUpper = true;
-            }
-        }
-
-        // 4. Kiểm tra các điều kiện và in ra kết quả tương ứng
-        // ...
-    }
-}
-```
-
 ---
 
-## BÀI 4: QUẢN LÝ ĐIỂM SỐ HỌC SINH (Mảng, Vòng lặp for-each, Hàm static)
+## BÀI 4: QUẢN LÝ ĐIỂM SỐ HỌC SINH
 
 ### 1. Mục tiêu
 - Sử dụng mảng để lưu trữ tập hợp dữ liệu.
@@ -240,59 +139,9 @@ Viết chương trình thực hiện các công việc sau:
   Số học sinh có điểm dưới trung bình (< 5.0): 2
   ```
 
-### 4. Gợi ý & Cảnh báo bẫy
-- **Lỗi chỉ số mảng:** Chỉ số của mảng chạy từ `0` đến `arr.length - 1`. Hãy cẩn thận khi duyệt vòng lặp để tránh lỗi `ArrayIndexOutOfBoundsException`.
-- Khi tính trung bình, hãy cộng dồn toàn bộ điểm rồi chia cho `arr.length`. Nhớ kiểm tra trường hợp độ dài mảng bằng 0 để tránh phép chia cho 0.
-
-### 5. Khung mã nguồn gợi ý
-```java
-import java.util.Scanner;
-
-public class ScoreManager {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Nhập số lượng học sinh: ");
-        int n = Integer.parseInt(scanner.nextLine());
-
-        double[] scores = new double[n];
-        for (int i = 0; i < n; i++) {
-            System.out.print("Nhập điểm học sinh thứ " + (i + 1) + ": ");
-            scores[i] = Double.parseDouble(scanner.nextLine());
-        }
-
-        // Gọi các hàm và in kết quả ra màn hình
-        System.out.println("Điểm cao nhất: " + findMax(scores));
-        System.out.printf("Điểm trung bình lớp: %.2f%n", calculateAverage(scores));
-        System.out.println("Số học sinh dưới trung bình: " + countFailedStudents(scores));
-    }
-
-    public static double findMax(double[] arr) {
-        double max = arr[0];
-        // Viết code tìm giá trị lớn nhất ở đây
-        // ...
-        return max;
-    }
-
-    public static double calculateAverage(double[] arr) {
-        double sum = 0;
-        // Viết code tính tổng ở đây
-        // ...
-        return sum / arr.length;
-    }
-
-    public static int countFailedStudents(double[] arr) {
-        int count = 0;
-        // Bắt buộc dùng vòng lặp for-each để đếm số học sinh có điểm < 5.0
-        // ...
-        return count;
-    }
-}
-```
-
 ---
 
-## BÀI 5: PHÂN TÍCH & CHUẨN HÓA THÔNG TIN NHÂN VIÊN (String Manipulation)
+## BÀI 5: PHÂN TÍCH & CHUẨN HÓA THÔNG TIN NHÂN VIÊN
 
 ### 1. Mục tiêu
 - Sử dụng linh hoạt các phương thức của lớp `String`: `trim()`, `split()`, `substring()`, `toLowerCase()`, `toUpperCase()`, và `contains()`.
@@ -324,76 +173,3 @@ Hãy xử lý và chuẩn hóa chuỗi này theo các yêu cầu sau:
   Mã nhân viên: nv204 | Họ và tên: Lê Hoàng Nhân | Tuổi: 24 | Bộ phận: Phòng kỹ thuật
   ```
 
-### 4. Gợi ý & Cảnh báo bẫy
-- Sử dụng phương thức `split("-")` để tách chuỗi gốc thành một mảng gồm 4 phần tử.
-- Nhớ gọi `.trim()` cho từng phần tử sau khi tách để loại bỏ khoảng trắng thừa bao quanh giá trị.
-- Để chuẩn hóa họ tên: Tách chuỗi tên thô thành mảng các từ (ví dụ dùng `split("\\s+")` để tách theo một hoặc nhiều khoảng trắng). Lặp qua từng từ, chuyển từ đó về chữ thường (`toLowerCase()`), sau đó dùng `toUpperCase()` kết hợp `substring()` để viết hoa ký tự đầu tiên. Nối các từ lại với nhau bằng một dấu cách `" "`.
-- Sử dụng `toLowerCase().contains("kỹ thuật")` để kiểm tra phòng ban không phân biệt chữ hoa chữ thường.
-
-### 5. Khung mã nguồn gợi ý
-```java
-import java.util.Scanner;
-
-public class EmployeeInfoStandardizer {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Nhập thông tin nhân viên: ");
-        String rawInput = scanner.nextLine();
-
-        // 1. Loại bỏ khoảng trắng 2 đầu và tách mảng theo dấu "-"
-        String[] parts = rawInput.trim().split("-");
-
-        if (parts.length < 4) {
-            System.out.println("Thông tin nhập vào không đúng định dạng!");
-            return;
-        }
-
-        // 2. Trích xuất và trim() các trường thông tin
-        String code = parts[0].trim();
-        String rawName = parts[1].trim();
-        String rawYear = parts[2].trim();
-        String department = parts[3].trim();
-
-        // 3. Chuẩn hóa họ tên
-        String formattedName = capitalizeName(rawName);
-
-        // 4. Kiểm tra phòng ban
-        if (department.toLowerCase().contains("kỹ thuật") || department.toLowerCase().contains("ky thuat")) {
-            System.out.println("Phân loại: Nhân viên kỹ thuật");
-        } else {
-            System.out.println("Phân loại: Nhân viên nghiệp vụ");
-        }
-
-        // 5. Tính tuổi và in kết quả định dạng
-        int birthYear = Integer.parseInt(rawYear);
-        int age = 2026 - birthYear;
-
-        System.out.println("Mã nhân viên: " + code + 
-                           " | Họ và tên: " + formattedName + 
-                           " | Tuổi: " + age + 
-                           " | Bộ phận: " + department);
-    }
-
-    public static String capitalizeName(String name) {
-        // Tách chuỗi tên thô thành các từ riêng biệt bằng một hoặc nhiều khoảng trắng
-        String[] words = name.split("\\s+");
-        String result = "";
-
-        for (int i = 0; i < words.length; i++) {
-            String word = words[i];
-            if (word.length() > 0) {
-                // Viết hoa chữ đầu, viết thường các chữ sau
-                String firstChar = word.substring(0, 1).toUpperCase();
-                String remaining = word.substring(1).toLowerCase();
-                
-                result += firstChar + remaining;
-                if (i < words.length - 1) {
-                    result += " "; // Thêm khoảng trắng giữa các từ
-                }
-            }
-        }
-        return result.trim();
-    }
-}
-```
