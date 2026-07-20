@@ -1,1 +1,165 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Buổi 4 - OOP cơ bản</title><link rel="stylesheet" href="styles.css"></head><body><nav class="topbar"><a class="brand" href="index.html">☕ JAVA PUBLIC HÈ</a><span>Buổi 4 / 8</span></nav><header class="hero"><div class="hero-inner"><div class="eyebrow">Buổi 04 • OOP</div><h1>Class, đối tượng & đóng gói</h1><p>Mô hình hóa thế giới bằng thuộc tính và hành vi.</p></div></header><div class="layout"><aside class="toc"><strong>Nội dung</strong><a href="#oop">OOP</a><a href="#class">Class</a><a href="#access">Truy cập</a><a href="#constructor">Constructor</a><a href="#bt">Bài tập</a></aside><main><section><h2>Mục tiêu</h2><ul class="objectives"><li>Phân biệt class và object</li><li>Tổ chức code bằng package</li><li>Áp dụng đóng gói</li><li>Dùng constructor, getter, setter</li></ul></section><section id="oop"><h2>1. Tư duy OOP</h2><p>OOP tổ chức chương trình quanh các đối tượng. Mỗi đối tượng có <strong>trạng thái</strong> (thuộc tính) và <strong>hành vi</strong> (phương thức). Ví dụ SinhVien có mã, tên, điểm và hành vi học, tính xếp loại.</p><p>Bốn tính chất chính: đóng gói, kế thừa, đa hình, trừu tượng. Buổi này tập trung vào đóng gói.</p></section><section id="class"><h2>2. Package, class và object</h2><pre><code>package buoi4;&#10;&#10;public class Student {&#10;    private String id;&#10;    private String name;&#10;    private double score;&#10;&#10;    public String getRank() {&#10;        return score &gt;= 8 ? "Giỏi" : score &gt;= 5 ? "Đạt" : "Chưa đạt";&#10;    }&#10;}</code></pre><p>Class là bản thiết kế; object là thực thể được tạo từ class. Một class có thể tạo nhiều object độc lập.</p></section><section id="access"><h2>3. Phạm vi truy cập</h2><table><tr><th>Modifier</th><th>Cùng class</th><th>Cùng package</th><th>Class con</th><th>Mọi nơi</th></tr><tr><td><code>private</code></td><td>✓</td><td>—</td><td>—</td><td>—</td></tr><tr><td>default</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr><tr><td><code>protected</code></td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr><tr><td><code>public</code></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr></table><div class="tip">Thuộc tính nên là <code>private</code>; cung cấp phương thức public có kiểm soát thay vì cho sửa trực tiếp.</div></section><section id="constructor"><h2>4. Constructor, getter, setter</h2><pre><code>public Student(String id, String name, double score) {&#10;    this.id = id;&#10;    this.name = name;&#10;    setScore(score);&#10;}&#10;&#10;public String getName() { return name; }&#10;&#10;public void setName(String name) {&#10;    if (name == null || name.isBlank())&#10;        throw new IllegalArgumentException("Tên không được trống");&#10;    this.name = name.trim();&#10;}&#10;&#10;public void setScore(double score) {&#10;    if (score &lt; 0 || score &gt; 10)&#10;        throw new IllegalArgumentException("Điểm phải từ 0 đến 10");&#10;    this.score = score;&#10;}</code></pre><p>Constructor trùng tên class, không có kiểu trả về và chạy khi dùng <code>new</code>. Getter đọc dữ liệu; setter cập nhật và kiểm tra tính hợp lệ.</p></section><section id="bt"><h2>5. Thực hành & bài tập</h2><div class="exercise"><strong>Quản lý sản phẩm:</strong> Class Product gồm id, name, price, quantity; constructor; getter/setter; phương thức tính thành tiền và in thông tin.</div><ol><li>Tạo class <code>Rectangle</code>, kiểm tra cạnh dương, tính chu vi/diện tích.</li><li>Tạo class <code>BankAccount</code> với deposit, withdraw; không cho số dư âm.</li><li>Tạo package <code>model</code> chứa class và <code>app</code> chứa Main.</li></ol><div class="nav-lessons"><a class="btn secondary" href="buoi-3.html">← Buổi 3</a><a class="btn" href="buoi-5.html">Buổi 5 →</a></div></section></main></div><footer><div class="footer-inner">Buổi 4 • OOP cơ bản</div></footer></body></html>
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Java – OOP, Package, Thuộc tính, Phương thức, Constructor, Getter, Setter</title>
+  <meta name="description" content="Bài học Java OOP bao gồm Package, Class, Thuộc tính, Phương thức, Phạm vi truy cập, Constructor, Getter và Setter với ví dụ thực tế và mã tương tác.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {font-family: 'Inter', sans-serif;}
+    .hero {background: linear-gradient(135deg, #6a11cb, #2575fc); color: white; padding: 2rem 0;}
+    pre {background: #f5f5f5; padding: 1rem; border-radius: 4px; overflow-x: auto; transition: background 0.3s;}
+    pre:hover {background: #e0e0ff;}
+    .toc a {display: block; margin: 0.5rem 0; color: #2575fc; text-decoration: none;}
+    .toc a:hover {text-decoration: underline;}
+  </style>
+</head>
+<body>
+  <nav class="topbar">
+    <a class="brand" href="index.html">☕ JAVA PUBLIC HÈ</a>
+    <span>Buổi 4 / 8</span>
+  </nav>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Buổi 04 • OOP</div>
+      <h1>Java OOP – Thuộc tính & Phương thức</h1>
+      <p>Mô hình hóa thế giới bằng thuộc tính và hành vi.</p>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="toc">
+      <strong>Nội dung</strong>
+      <a href="#oop">OOP trong Java</a>
+      <a href="#package_class">Package & Class</a>
+      <a href="#attributes_methods">Thuộc tính & Phương thức</a>
+      <a href="#access_scope">Phạm vi truy cập</a>
+      <a href="#ctor_get_set">Constructor, Getter, Setter</a>
+    </aside>
+    <main>
+      <section>
+        <h2>Mục tiêu</h2>
+        <ul class="objectives">
+          <li>Hiểu OOP trong Java</li>
+          <li>Biết cách dùng package và class</li>
+          <li>Nắm vững thuộc tính và phương thức</li>
+          <li>Áp dụng phạm vi truy cập</li>
+          <li>Viết constructor, getter và setter</li>
+        </ul>
+      </section>
+      <section id="oop">
+        <h2>1. OOP trong Java</h2>
+        <p>OOP (Object‑Oriented Programming) tổ chức chương trình quanh các <strong>đối tượng</strong>. Mỗi đối tượng có <strong>trạng thái</strong> (thuộc tính) và <strong>hành vi</strong> (phương thức). Ví dụ lớp <code>Student</code> có các thuộc tính <code>id</code>, <code>name</code>, <code>score</code> và phương thức <code>getRank()</code> để xác định xếp loại.</p>
+        <p>Bốn tính chất chính:</p>
+        <ul>
+          <li>Đóng gói (Encapsulation)</li>
+          <li>Kế thừa (Inheritance)</li>
+          <li>Đa hình (Polymorphism)</li>
+          <li>Trừu tượng (Abstraction)</li>
+        </ul>
+        <!-- Interactive example using JDoodle (embed placeholder) -->
+        <pre><code class="language-java">// JDoodle interactive snippet (replace with actual embed)
+public class DemoOOP {
+    public static void main(String[] args) {
+        Student s = new Student("SV01", "An", 8.5);
+        System.out.println(s.getRank()); // Giỏi
+    }
+}
+</code></pre>
+      </section>
+      <section id="package_class">
+        <h2>2. Package, Class và Object</h2>
+        <p>Package giúp tổ chức các class vào không gian tên logical.</p>
+        <pre><code class="language-java">package com.example.school;
+
+public class Student {
+    private String id;
+    private String name;
+    private double score;
+
+    public Student(String id, String name, double score) {
+        this.id = id;
+        this.name = name;
+        this.score = score;
+    }
+
+    public String getRank() {
+        return score >= 8 ? "Giỏi" : score >= 5 ? "Đạt" : "Chưa đạt";
+    }
+}
+</code></pre>
+        <p>Class là bản thiết kế; object là thực thể được tạo từ class.</p>
+      </section>
+      <section id="attributes_methods">
+        <h2>3. Thuộc tính & Phương thức</h2>
+        <p>Thuộc tính (field) lưu trạng thái; phương thức (method) định nghĩa hành vi.</p>
+        <table>
+          <tr><th>Thành phần</th><th>Cú pháp</th></tr>
+          <tr><td>Thuộc tính</td><td><code>private String name;</code></td></tr>
+          <tr><td>Phương thức</td><td><code>public String getName() { return name; }</code></td></tr>
+        </table>
+        <pre><code class="language-java">Student s = new Student("SV02", "Bình", 7.0);
+System.out.println(s.getName()); // Bình
+</code></pre>
+      </section>
+      <section id="access_scope">
+        <h2>4. Phạm vi truy cập</h2>
+        <table>
+          <tr><th>Modifier</th><th>Cùng class</th><th>Cùng package</th><th>Class con</th><th>Mọi nơi</th></tr>
+          <tr><td><code>private</code></td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>default</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr>
+          <tr><td><code>protected</code></td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+          <tr><td><code>public</code></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+        </table>
+        <div class="tip">Thuộc tính nên là <code>private</code>; cung cấp phương thức <code>public</code> để kiểm soát truy xuất.</div>
+      </section>
+      <section id="ctor_get_set">
+        <h2>5. Constructor, Getter, Setter</h2>
+        <pre><code class="language-java">public Student(String id, String name, double score) {
+    this.id = id;
+    this.name = name;
+    setScore(score);
+}
+
+public String getName() { return name; }
+
+public void setName(String name) {
+    if (name == null || name.isBlank())
+        throw new IllegalArgumentException("Tên không được trống");
+    this.name = name.trim();
+}
+
+public void setScore(double score) {
+    if (score < 0 || score > 10)
+        throw new IllegalArgumentException("Điểm phải từ 0 đến 10");
+    this.score = score;
+}
+</code></pre>
+        <p>Constructor khởi tạo giá trị ban đầu; getter trả về giá trị; setter kiểm tra và gán giá trị.</p>
+        <!-- Interactive example placeholder -->
+        <pre><code class="language-java">Student s = new Student("SV03", "Cường", 9.0);
+System.out.println(s.getRank()); // Giỏi
+s.setScore(6.5);
+System.out.println(s.getRank()); // Đạt
+</code></pre>
+      </section>
+      <section id="bt">
+        <h2>6. Thực hành & Bài tập</h2>
+        <div class="exercise"><strong>Quản lý sản phẩm:</strong> Class <code>Product</code> gồm id, name, price, quantity; constructor; getter/setter; phương thức <code>double totalPrice()</code> và <code>void printInfo()</code>.</div>
+        <ol>
+          <li>Tạo class <code>Rectangle</code> với các thuộc tính chiều dài, chiều rộng; kiểm tra dương, tính chu vi/diện tích.</li>
+          <li>Tạo class <code>BankAccount</code> với các phương thức <code>deposit</code>, <code>withdraw</code>; không cho số dư âm.</li>
+          <li>Đặt các class trong package <code>model</code> và tạo lớp <code>Main</code> trong package <code>app</code> để chạy ví dụ.</li>
+        </ol>
+        <div class="nav-lessons"><a class="btn secondary" href="buoi-3.html">← Buổi 3</a><a class="btn" href="buoi-5.html">Buổi 5 →</a></div>
+      </section>
+    </main>
+  </div>
+  <footer>
+    <div class="footer-inner">Buổi 4 • OOP cơ bản</div>
+  </footer>
+</body>
+</html>
