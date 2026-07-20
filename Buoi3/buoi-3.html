@@ -69,6 +69,8 @@ public class DemoOOP {
     }
 }
 </code></pre>
+
+
       </section>
       <section id="package_class">
         <h2>2. Package, Class và Object</h2>
@@ -138,6 +140,7 @@ public void setScore(double score) {
     this.score = score;
 }
 </code></pre>
+        <div class="note"><strong>Chú ý:</strong> Trong setter, luôn kiểm tra giá trị đầu vào (ví dụ không cho <code>null</code> hoặc <code>blank</code> cho tên, giá trị điểm từ 0‑10). Throw <code>IllegalArgumentException</code> nếu không hợp lệ để tránh lỗi runtime.</div>
         <p>Constructor khởi tạo giá trị ban đầu; getter trả về giá trị; setter kiểm tra và gán giá trị.</p>
         <!-- Interactive example placeholder -->
         <pre><code class="language-java">Student s = new Student("SV03", "Cường", 9.0);
