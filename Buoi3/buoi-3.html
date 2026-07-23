@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Java – OOP, Package, Thuộc tính, Phương thức, Constructor, Getter, Setter</title>
+  <meta name="description" content="Bài học Java OOP bao gồm Package, Class, Thuộc tính, Phương thức, Phạm vi truy cập, Constructor, Getter và Setter với ví dụ thực tế và mã tương tác.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {font-family: 'Inter', sans-serif;}
+    .hero {background: linear-gradient(135deg, #6a11cb, #2575fc); color: white; padding: 2rem 0;}
+    pre {background: #f5f5f5; padding: 1rem; border-radius: 4px; overflow-x: auto;}
+    .toc a {display: block; margin: 0.5rem 0; color: #2575fc; text-decoration: none;}
+    .toc a:hover {text-decoration: underline;}
+    .note {background: #fff3cd; border-left: 4px solid #ff9800; padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 4px; font-size: 0.95rem;}
+    .note strong {color: #e65100;}
+    .concept-box {background: #e3f2fd; border-left: 4px solid #2196f3; padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 4px;}
+    .concept-box strong {color: #0d47a1;}
+  </style>
+</head>
+<body>
+  <nav class="topbar">
+    <a class="brand" href="index.html">☕ JAVA PUBLIC HÈ</a>
+    <span>Buổi 4 / 8</span>
+  </nav>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Buổi 04 • OOP</div>
+      <h1>Java OOP – Thuộc tính & Phương thức</h1>
+      <p>Mô hình hóa thế giới bằng thuộc tính và hành vi.</p>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="toc">
+      <strong>Nội dung</strong>
+      <a href="#oop">OOP trong Java</a>
+      <a href="#package_class">Package & Class</a>
+      <a href="#attributes_methods">Thuộc tính & Phương thức</a>
+      <a href="#access_scope">Phạm vi truy cập</a>
+      <a href="#ctor_get_set">Constructor, Getter, Setter</a>
+    </aside>
+    <main>
+      <section>
+        <h2>Mục tiêu</h2>
+        <ul class="objectives">
+          <li>Hiểu OOP trong Java</li>
+          <li>Biết cách dùng package và class</li>
+          <li>Nắm vững thuộc tính và phương thức</li>
+          <li>Áp dụng phạm vi truy cập</li>
+          <li>Viết constructor, getter và setter</li>
+        </ul>
+      </section>
+      <section id="oop">
+        <h2>1. OOP trong Java</h2>
+        <div class="concept-box"><strong>Khái niệm:</strong> OOP (Object‑Oriented Programming – Lập trình hướng đối tượng) là phương pháp tổ chức chương trình quanh các <strong>đối tượng (object)</strong>. Mỗi đối tượng bao gồm <strong>trạng thái</strong> (thuộc tính / field) và <strong>hành vi</strong> (phương thức / method). Thay vì viết code tuần tự, OOP cho phép mô hình hóa thế giới thực thành các class và object tương tác với nhau.</div>
+        <p>Ví dụ: Lớp <code>Student</code> có các thuộc tính <code>id</code>, <code>name</code>, <code>score</code> và phương thức <code>getRank()</code> để xác định xếp loại. Mỗi sinh viên cụ thể là một <strong>object</strong> được tạo từ class này.</p>
+        <p><strong>Bốn tính chất chính của OOP:</strong></p>
+        <ul>
+          <li><strong>Đóng gói (Encapsulation)</strong> – Che giấu dữ liệu bên trong class, chỉ cho phép truy cập qua phương thức công khai (getter/setter). Giúp bảo vệ dữ liệu khỏi bị thay đổi trái phép.</li>
+          <li><strong>Kế thừa (Inheritance)</strong> – Một class con có thể thừa hưởng thuộc tính và phương thức từ class cha, giúp tái sử dụng code. Ví dụ: <code>SinhVienIT extends Student</code>.</li>
+          <li><strong>Đa hình (Polymorphism)</strong> – Cùng một phương thức nhưng có thể hoạt động khác nhau tùy vào đối tượng gọi nó. Ví dụ: <code>getRank()</code> có thể bị override ở class con để tính điểm khác.</li>
+          <li><strong>Trừu tượng (Abstraction)</strong> – Ẩn đi chi tiết triển khai, chỉ hiển thị giao diện cần thiết. Sử dụng <code>abstract class</code> hoặc <code>interface</code>.</li>
+        </ul>
+        <!-- Interactive example using JDoodle (embed placeholder) -->
+        <pre><code class="language-java">// Ví dụ minh họa OOP cơ bản
+public class DemoOOP {
+    public static void main(String[] args) {
+        Student s = new Student("SV01", "An", 8.5);
+        System.out.println(s.getRank()); // Giỏi
+    }
+}
+</code></pre>
+        <div class="note"><strong>🚨 Chú ý – Lỗi người mới hay mắc:</strong>
+          <ul>
+            <li>❌ Quên viết hoa chữ cái đầu tên class: <code>demoOOP</code> → ✅ Phải là <code>DemoOOP</code> (quy tắc PascalCase).</li>
+            <li>❌ Viết sai chữ ký <code>main</code>: <code>public static void Main(String[] args)</code> → ✅ Phải là <code>main</code> viết thường.</li>
+            <li>❌ Dùng <code>System.out.Println</code> (viết hoa P) → ✅ Phải là <code>System.out.println</code> (viết thường).</li>
+            <li>❌ Quên import class <code>Student</code> khi nằm khác package → ✅ Thêm <code>import com.example.school.Student;</code>.</li>
+            <li>❌ Nhầm lẫn <strong>class</strong> và <strong>object</strong>: Class là bản thiết kế, object là thực thể tạo ra bằng <code>new</code>.</li>
+          </ul>
+        </div>
+      </section>
+      <section id="package_class">
+        <h2>2. Package, Class và Object</h2>
+        <div class="concept-box"><strong>Khái niệm:</strong>
+          <ul>
+            <li><strong>Package</strong> – Là cách tổ chức các class vào các thư mục logic, giống như thư mục trong hệ thống file. Cú pháp: <code>package ten_package;</code> (đặt ở dòng đầu tiên của file). Quy ước đặt tên: viết thường, dùng dấu chấm phân cách, thường theo tên miền đảo ngược. Ví dụ: <code>com.example.school</code>.</li>
+            <li><strong>Class (Lớp)</strong> – Là bản thiết kế (blueprint) mô tả cấu trúc và hành vi của đối tượng. Một file <code>.java</code> chỉ được chứa <strong>tối đa một class public</strong>, và tên class public phải trùng với tên file.</li>
+            <li><strong>Object (Đối tượng)</strong> – Là thực thể cụ thể được tạo ra từ class bằng từ khóa <code>new</code>. Ví dụ: <code>Student s = new Student("SV01", "An", 8.5);</code> tạo một object <code>s</code> từ class <code>Student</code>.</li>
+          </ul>
+        </div>
+        <pre><code class="language-java">package com.example.school;
+
+public class Student {
+    private String id;
+    private String name;
+    private double score;
+
+    public Student(String id, String name, double score) {
+        this.id = id;
+        this.name = name;
+        this.score = score;
+    }
+
+    public String getRank() {
+        return score >= 8 ? "Giỏi" : score >= 5 ? "Đạt" : "Chưa đạt";
+    }
+}
+</code></pre>
+        <div class="note"><strong>🚨 Chú ý – Lỗi người mới hay mắc:</strong>
+          <ul>
+            <li>❌ Đặt tên file không trùng với tên class public: File là <code>student.java</code> nhưng class là <code>Student</code> → ✅ File phải là <code>Student.java</code>.</li>
+            <li>❌ Quên khai báo <code>package</code> ở dòng đầu hoặc đặt sai vị trí (sau import) → ✅ <code>package</code> luôn là dòng đầu tiên trong file.</li>
+            <li>❌ Đặt 2 class <code>public</code> trong cùng 1 file → ✅ Mỗi file chỉ được 1 class <code>public</code>.</li>
+            <li>❌ Cấu trúc thư mục không khớp package: Khai báo <code>package com.example.school</code> nhưng file không nằm trong thư mục <code>com/example/school/</code> → ✅ Thư mục phải khớp chính xác.</li>
+            <li>❌ Nhầm lẫn <code>class</code> và <code>object</code>: <code>Student</code> là class (bản thiết kế), <code>new Student(...)</code> tạo ra object (thực thể).</li>
+          </ul>
+        </div>
+        <p>Class là bản thiết kế; object là thực thể được tạo từ class bằng từ khóa <code>new</code>. Một class có thể tạo ra nhiều object khác nhau.</p>
+      </section>
+      <section id="attributes_methods">
+        <h2>3. Thuộc tính & Phương thức</h2>
+        <div class="concept-box"><strong>Khái niệm:</strong>
+          <ul>
+            <li><strong>Thuộc tính (Attribute / Field)</strong> – Là các biến được khai báo bên trong class, dùng để lưu trữ <strong>trạng thái</strong> của đối tượng. Cú pháp: <code>access_modifier kieu_du_lieu ten_thuoc_tinh;</code>. Ví dụ: <code>private String name;</code></li>
+            <li><strong>Phương thức (Method)</strong> – Là hàm được khai báo bên trong class, dùng để định nghĩa <strong>hành vi</strong> của đối tượng. Cú pháp: <code>access_modifier kieu_tra_ve ten_phuong_thuc(tham_so) { ... }</code>. Ví dụ: <code>public String getName() { return name; }</code></li>
+            <li><strong>Từ khóa <code>this</code></strong> – Tham chiếu đến đối tượng hiện tại. Dùng để phân biệt thuộc tính của class và tham số phương thức khi trùng tên. Ví dụ: <code>this.name = name;</code></li>
+          </ul>
+        </div>
+        <table>
+          <tr><th>Thành phần</th><th>Cú pháp</th><th>Ý nghĩa</th></tr>
+          <tr><td>Thuộc tính</td><td><code>private String name;</code></td><td>Lưu trữ tên sinh viên</td></tr>
+          <tr><td>Phương thức</td><td><code>public String getName() { return name; }</code></td><td>Trả về giá trị tên</td></tr>
+          <tr><td>Phương thức void</td><td><code>public void setName(String name) { this.name = name; }</code></td><td>Gán giá trị tên (không trả về gì)</td></tr>
+        </table>
+        <pre><code class="language-java">Student s = new Student("SV02", "Bình", 7.0);
+System.out.println(s.getName()); // Bình
+</code></pre>
+        <div class="note"><strong>🚨 Chú ý – Lỗi người mới hay mắc:</strong>
+          <ul>
+            <li>❌ Truy cập trực tiếp thuộc tính <code>private</code> từ bên ngoài: <code>s.name</code> → ✅ Phải dùng getter: <code>s.getName()</code>.</li>
+            <li>❌ Quên từ khóa <code>return</code> trong phương thức có kiểu trả về: <code>public String getName() { name; }</code> → ✅ Phải có <code>return name;</code>.</li>
+            <li>❌ Nhầm <code>void</code> và kiểu trả về: Phương thức <code>void</code> không trả về giá trị, nếu viết <code>return name;</code> trong method <code>void</code> sẽ bị lỗi biên dịch.</li>
+            <li>❌ Quên dùng <code>this</code> khi tham số trùng tên thuộc tính: <code>name = name;</code> (gán chính nó) → ✅ <code>this.name = name;</code>.</li>
+            <li>❌ Gọi phương thức nhưng quên dấu ngoặc <code>()</code>: <code>s.getName</code> → ✅ <code>s.getName()</code>.</li>
+          </ul>
+        </div>
+      </section>
+      <section id="access_scope">
+        <h2>4. Phạm vi truy cập (Access Modifiers)</h2>
+        <div class="concept-box"><strong>Khái niệm:</strong> Access Modifier (phạm vi truy cập) là từ khóa xác định <strong>ai được phép truy cập</strong> vào thuộc tính, phương thức hoặc class. Java có 4 mức truy cập từ chặt nhất đến rộng nhất: <code>private</code> → <code>default</code> (không ghi gì) → <code>protected</code> → <code>public</code>. Việc chọn đúng modifier là nền tảng của nguyên tắc <strong>Đóng gói (Encapsulation)</strong>.</div>
+        <table>
+          <tr><th>Modifier</th><th>Cùng class</th><th>Cùng package</th><th>Class con (khác package)</th><th>Mọi nơi</th></tr>
+          <tr><td><code>private</code></td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>default (không ghi gì)</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr>
+          <tr><td><code>protected</code></td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+          <tr><td><code>public</code></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+        </table>
+        <pre><code class="language-java">public class Student {
+    private String name;      // Chỉ truy cập được trong class Student
+    String school;            // default – cùng package mới truy cập được
+    protected double score;   // cùng package + class con
+    public String id;         // truy cập được ở mọi nơi
+}
+</code></pre>
+        <div class="note"><strong>🚨 Chú ý – Lỗi người mới hay mắc:</strong>
+          <ul>
+            <li>❌ Đặt thuộc tính là <code>public</code>: <code>public String name;</code> → ✅ Nên dùng <code>private</code> + getter/setter để bảo vệ dữ liệu (nguyên tắc Encapsulation).</li>
+            <li>❌ Nhầm <code>default</code> là từ khóa: Viết <code>default String name;</code> → ✅ Default access nghĩa là <strong>không viết gì</strong>: <code>String name;</code></li>
+            <li>❌ Nghĩ <code>protected</code> chỉ dành cho class con → ✅ <code>protected</code> còn cho phép truy cập từ <strong>cùng package</strong>.</li>
+            <li>❌ Dùng <code>private</code> cho class ngoài cùng (top-level class) → ✅ Top-level class chỉ có thể là <code>public</code> hoặc default, không thể <code>private</code> hay <code>protected</code>.</li>
+          </ul>
+        </div>
+        <div class="tip"><strong>Quy tắc vàng:</strong> Thuộc tính nên là <code>private</code>; cung cấp phương thức <code>public</code> getter/setter để kiểm soát truy xuất. Đây chính là nguyên tắc <strong>Encapsulation</strong>.</div>
+      </section>
+      <section id="ctor_get_set">
+        <h2>5. Constructor, Getter, Setter</h2>
+        <div class="concept-box"><strong>Khái niệm:</strong>
+          <ul>
+            <li><strong>Constructor (Hàm khởi tạo)</strong> – Là phương thức đặc biệt được gọi tự động khi tạo object bằng <code>new</code>. Tên constructor <strong>phải trùng với tên class</strong> và <strong>không có kiểu trả về</strong> (kể cả <code>void</code>). Dùng để gán giá trị ban đầu cho các thuộc tính.</li>
+            <li><strong>Default Constructor</strong> – Nếu bạn không viết constructor nào, Java tự tạo một constructor rỗng (không tham số). Nhưng khi bạn viết ít nhất 1 constructor có tham số, constructor mặc định <strong>sẽ biến mất</strong>.</li>
+            <li><strong>Getter</strong> – Phương thức <code>public</code> dùng để <strong>đọc</strong> giá trị thuộc tính <code>private</code>. Quy ước: <code>getXxx()</code> hoặc <code>isXxx()</code> (cho boolean).</li>
+            <li><strong>Setter</strong> – Phương thức <code>public</code> dùng để <strong>ghi / thay đổi</strong> giá trị thuộc tính <code>private</code>. Quy ước: <code>setXxx(value)</code>. Nên kiểm tra dữ liệu đầu vào (validation) trước khi gán.</li>
+          </ul>
+        </div>
+        <pre><code class="language-java">// Constructor – khởi tạo đối tượng
+public Student(String id, String name, double score) {
+    this.id = id;
+    this.name = name;
+    setScore(score); // Gọi setter để validate ngay trong constructor
+}
+
+// Getter – đọc giá trị
+public String getName() { return name; }
+
+// Setter – ghi giá trị có kiểm tra
+public void setName(String name) {
+    if (name == null || name.isBlank())
+        throw new IllegalArgumentException("Tên không được trống");
+    this.name = name.trim();
+}
+
+public void setScore(double score) {
+    if (score < 0 || score > 10)
+        throw new IllegalArgumentException("Điểm phải từ 0 đến 10");
+    this.score = score;
+}
+</code></pre>
+        <div class="note"><strong>🚨 Chú ý – Lỗi người mới hay mắc:</strong>
+          <ul>
+            <li>❌ Đặt kiểu trả về cho constructor: <code>void Student(...)</code> → ✅ Constructor <strong>không có kiểu trả về</strong>: <code>public Student(...)</code>.</li>
+            <li>❌ Tên constructor không trùng tên class: <code>public student(...)</code> → ✅ Phải viết đúng: <code>public Student(...)</code> (PascalCase, trùng tên class).</li>
+            <li>❌ Quên tạo constructor không tham số khi đã có constructor có tham số: <code>Student s = new Student();</code> sẽ lỗi → ✅ Thêm constructor rỗng nếu cần: <code>public Student() {}</code>.</li>
+            <li>❌ Setter không validate dữ liệu: <code>public void setScore(double score) { this.score = score; }</code> → ✅ Luôn kiểm tra: điểm từ 0–10, tên không null/blank.</li>
+            <li>❌ Getter trả sai kiểu: <code>public int getName()</code> nhưng <code>name</code> là <code>String</code> → ✅ Kiểu trả về phải khớp với kiểu thuộc tính.</li>
+            <li>❌ Quên <code>this</code> trong constructor/setter khi tham số trùng tên: <code>name = name;</code> → ✅ <code>this.name = name;</code>.</li>
+          </ul>
+        </div>
+        <p>Constructor khởi tạo giá trị ban đầu; getter trả về giá trị; setter kiểm tra và gán giá trị. Ba thành phần này tạo nên nền tảng của nguyên tắc <strong>Đóng gói (Encapsulation)</strong>.</p>
+        <pre><code class="language-java">// Ví dụ sử dụng constructor, getter, setter
+Student s = new Student("SV03", "Cường", 9.0);
+System.out.println(s.getRank()); // Giỏi
+s.setScore(6.5);
+System.out.println(s.getRank()); // Đạt
+
+// Thử gán giá trị không hợp lệ → sẽ ném exception
+// s.setScore(15); // IllegalArgumentException: Điểm phải từ 0 đến 10
+</code></pre>
+      </section>
+      <section id="bt">
+        <h2>6. Thực hành & Bài tập</h2>
+        <div class="exercise"><strong>Quản lý sản phẩm:</strong> Class <code>Product</code> gồm id, name, price, quantity; constructor; getter/setter; phương thức <code>double totalPrice()</code> và <code>void printInfo()</code>.</div>
+        <ol>
+          <li>Tạo class <code>Rectangle</code> với các thuộc tính chiều dài, chiều rộng; kiểm tra dương, tính chu vi/diện tích.</li>
+          <li>Tạo class <code>BankAccount</code> với các phương thức <code>deposit</code>, <code>withdraw</code>; không cho số dư âm.</li>
+          <li>Đặt các class trong package <code>model</code> và tạo lớp <code>Main</code> trong package <code>app</code> để chạy ví dụ.</li>
+        </ol>
+        <div class="nav-lessons"><a class="btn secondary" href="buoi-3.html">← Buổi 3</a><a class="btn" href="buoi-5.html">Buổi 5 →</a></div>
+      </section>
+    </main>
+  </div>
+  <footer>
+    <div class="footer-inner">Buổi 4 • OOP cơ bản</div>
+  </footer>
+</body>
+</html>
