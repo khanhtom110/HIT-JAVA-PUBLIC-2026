@@ -32,7 +32,7 @@ graph TD
 
     Toy -->|extends| ElectronicToy
     Toy -->|extends| PlushToy
-    Main -->|tạo mảng Toy[] & gọi printInfo| Toy
+    Main -->|"tạo mảng Toy và gọi printInfo"| Toy
 ```
 
 ---
