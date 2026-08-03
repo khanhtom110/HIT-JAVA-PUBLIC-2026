@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Java Fundamentals - HIT-JAVA-PUBLIC-2026</title>
+    <style>
+        :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --accent: #e8f1ff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #dfe7f5;
+            --success: #1f9d61;
+            --warning: #d97706;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(180deg, #eef5ff 0%, var(--bg) 100%);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .container {
+            width: min(1100px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: #fff;
+            padding: 40px 0 60px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 0.9rem;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: clamp(2rem, 4vw, 3rem);
+        }
+
+        .lead {
+            margin: 0;
+            font-size: 1.08rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 700px;
+        }
+
+        .hero-box {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 18px;
+            padding: 24px;
+            backdrop-filter: blur(3px);
+        }
+
+        .hero-box h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+
+        .hero-box ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        main {
+            margin-top: -30px;
+            padding-bottom: 60px;
+        }
+
+        .section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            background: linear-gradient(90deg, rgba(26, 115, 232, 0.12), rgba(26, 115, 232, 0.03));
+            border-left: 5px solid var(--primary);
+            padding: 12px 14px;
+            border-radius: 10px;
+        }
+
+        h3 {
+            margin-top: 26px;
+            color: var(--text);
+            background: rgba(26, 115, 232, 0.06);
+            border-left: 4px solid var(--primary);
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        .concept {
+            background: #f0f7ff;
+            border: 1px solid #cfe0ff;
+            border-left: 5px solid var(--primary);
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin: 16px 0;
+        }
+
+        .concept strong {
+            color: var(--primary-dark);
+        }
+
+        .important {
+            background: #fff7ed;
+            border: 1px solid #ffd8a8;
+            border-left: 5px solid var(--warning);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin: 18px 0;
+        }
+
+        .important strong {
+            color: #a85b00;
+        }
+
+        .note {
+            background: var(--accent);
+            border-left: 5px solid var(--primary);
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin: 16px 0;
+        }
+
+        .warning {
+            background: #fff7ed;
+            border-left: 5px solid var(--warning);
+        }
+
+        .method-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin-top: 18px;
+        }
+
+        .method-box h4 {
+            margin: 0 0 12px;
+            color: var(--primary-dark);
+            font-size: 1.05rem;
+        }
+
+        pre {
+            background: #111827;
+            color: #e5f3ff;
+            padding: 18px 16px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin-top: 12px;
+            margin-bottom: 18px;
+        }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        ul,
+        ol {
+            padding-left: 22px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .exercise {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin-top: 12px;
+        }
+
+        .exercise strong {
+            color: var(--primary-dark);
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 0.82rem;
+            font-weight: 700;
+            background: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 999px;
+            margin-right: 8px;
+            margin-bottom: 6px;
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            padding: 18px 0 40px;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 760px) {
+
+            .grid-2,
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 22px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="topbar">
+                <div class="brand">HIT-JAVA-PUBLIC-2026</div>
+                <div class="badge">Java Core Fundamentals</div>
+            </div>
+
+            <div class="hero">
+                <div>
+                    <h1>Java cơ bản</h1>
+                    <p class="lead">
+                        Tài liệu tổng hợp các kiến thức quan trọng về List, ArrayList, static,
+                        this, và nạp chồng phương thức trong Java.
+                    </p>
+                </div>
+
+                <div class="hero-box">
+                    <h3>Nội dung chính</h3>
+                    <ul>
+                        <li>List và ArrayList</li>
+                        <li>Static trong Java</li>
+                        <li>Từ khóa this trong Java</li>
+                        <li>Nạp chồng phương thức</li>
+                        <li>Bài tập luyện tập</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="section">
+            <h2>1. List và ArrayList</h2>
+
+            <div class="concept">
+                <strong>Khái niệm:</strong> List là interface dùng để lưu trữ dữ liệu theo thứ tự, cho phép truy cập
+                bằng chỉ số. ArrayList là lớp triển khai phổ biến nhất của List. Khi cần lưu nhiều phần tử nhưng không
+                biết trước số lượng, ArrayList là lựa chọn tiện lợi và dễ dùng.
+            </div>
+
+            <h3>Đặc điểm chính của List</h3>
+            <ul>
+                <li>Giữ nguyên thứ tự các phần tử khi thêm vào.</li>
+                <li>Cho phép truy cập phần tử theo vị trí index.</li>
+                <li>Cho phép phần tử trùng lặp.</li>
+                <li>Có thể thay đổi kích thước khi cần thêm hoặc xóa phần tử.</li>
+                <li>Thường được sử dụng trong các bài toán quản lý danh sách, sinh viên, sản phẩm, điểm số, ...</li>
+            </ul>
+
+            <h3>Cách khai báo và khởi tạo</h3>
+            <pre><code>import java.util.ArrayList;
+import java.util.List;
+
+List&lt;String&gt; sinhVien = new ArrayList&lt;&gt;();</code></pre>
+
+            <div class="important">
+                <strong>Chú ý:</strong> Khi khai báo biến, nên dùng kiểu List để code dễ mở rộng hơn. Khi cần khởi tạo
+                đối tượng cụ thể, mới dùng new ArrayList&lt;&gt;().
+            </div>
+
+            <h3>Ví dụ cho từng phương thức của List/ArrayList</h3>
+
+            <div class="method-box">
+                <h4>1. add(): thêm phần tử</h4>
+                <pre><code>List&lt;String&gt; danhSach = new ArrayList&lt;&gt;();
+danhSach.add("An");
+danhSach.add("Binh");
+danhSach.add("Cuong");
+System.out.println(danhSach); // [An, Binh, Cuong]</code></pre>
+            </div>
+
+            <div class="method-box">
+                <h4>2. get(): lấy phần tử theo vị trí</h4>
+                <pre><code>List&lt;String&gt; danhSach = new ArrayList&lt;&gt;();
+danhSach.add("An");
+danhSach.add("Binh");
+System.out.println(danhSach.get(0)); // An
+System.out.println(danhSach.get(1)); // Binh</code></pre>
+            </div>
+
+            <div class="method-box">
+                <h4>3. set(): thay đổi giá trị ở vị trí đã có</h4>
+                <pre><code>List&lt;String&gt; danhSach = new ArrayList&lt;&gt;();
+danhSach.add("An");
+danhSach.add("Binh");
+danhSach.set(1, "Duy");
+System.out.println(danhSach); // [An, Duy]</code></pre>
+            </div>
+
+            <div class="method-box">
+                <h4>4. remove(): xóa phần tử</h4>
+                <pre><code>List&lt;Integer&gt; so = new ArrayList&lt;&gt;();
+so.add(10);
+so.add(20);
+so.add(30);
+so.remove(1);
+System.out.println(so); // [10, 30]</code></pre>
+            </div>
+
+            <div class="method-box">
+                <h4>5. size(): lấy số lượng phần tử</h4>
+                <pre><code>List&lt;String&gt; danhSach = new ArrayList&lt;&gt;();
+danhSach.add("A");
+danhSach.add("B");
+danhSach.add("C");
+System.out.println(danhSach.size()); // 3</code></pre>
+            </div>
+
+            <div class="method-box">
+                <h4>6. contains(): kiểm tra phần tử có tồn tại hay không</h4>
+                <pre><code>List&lt;String&gt; danhSach = new ArrayList&lt;&gt;();
+danhSach.add("Java");
+danhSach.add("C++");
+System.out.println(danhSach.contains("Java")); // true
+System.out.println(danhSach.contains("Python")); // false</code></pre>
+            </div>
+
+            <div class="method-box">
+                <h4>7. indexOf(): tìm vị trí đầu tiên của phần tử</h4>
+                <pre><code>List&lt;String&gt; danhSach = new ArrayList&lt;&gt;();
+danhSach.add("Java");
+danhSach.add("PHP");
+danhSach.add("Java");
+System.out.println(danhSach.indexOf("Java")); // 0</code></pre>
+            </div>
+
+            <div class="method-box">
+                <h4>8. isEmpty(): kiểm tra danh sách có rỗng không</h4>
+                <pre><code>List&lt;String&gt; danhSach = new ArrayList&lt;&gt;();
+System.out.println(danhSach.isEmpty()); // true
+
+danhSach.add("Java");
+System.out.println(danhSach.isEmpty()); // false</code></pre>
+            </div>
+
+            <h3>So sánh List/ArrayList với mảng</h3>
+            <ul>
+                <li>Mảng có kích thước cố định, còn ArrayList có thể tăng hoặc giảm theo nhu cầu.</li>
+                <li>Mảng chỉ lưu dữ liệu cùng kiểu, còn List có thể quản lý linh hoạt hơn trong quá trình code.</li>
+                <li>ArrayList hỗ trợ nhiều phương thức tiện ích như add, remove, set, contains, size,...</li>
+            </ul>
+
+            <div class="warning">
+                <strong>Chú ý:</strong> Với dữ liệu dạng số nguyên, nếu dùng ArrayList thì cần dùng Integer thay vì int.
+                Vì Integer là kiểu đối tượng, còn int là kiểu nguyên thủy.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>2. Static trong Java</h2>
+
+            <div class="concept">
+                <strong>Khái niệm:</strong> Từ khóa static được dùng để khai báo thành viên thuộc về class, không thuộc
+                về đối tượng riêng lẻ. Nghĩa là dù bạn tạo bao nhiêu đối tượng, biến hoặc phương thức static chỉ có một
+                bản duy nhất và được chia sẻ cho toàn bộ object của class.
+            </div>
+
+            <h3>Biến static</h3>
+            <p>
+                Biến static thường được dùng để lưu thông tin chung cho mọi đối tượng như tên trường, số lượng sinh
+                viên, trạng thái hệ thống, ...
+            </p>
+            <pre><code>class SinhVien {
+    String ten;
+    static String truong = "HIT";
+
+    public void inThongTin() {
+        System.out.println("Ten: " + ten + ", Truong: " + truong);
+    }
+}
+
+public class DemoStatic {
+    public static void main(String[] args) {
+        SinhVien sv1 = new SinhVien();
+        sv1.ten = "An";
+
+        SinhVien sv2 = new SinhVien();
+        sv2.ten = "Binh";
+
+        System.out.println(sv1.truong); // HIT
+        System.out.println(sv2.truong); // HIT
+    }
+}</code></pre>
+
+            <h3>Phương thức static</h3>
+            <p>
+                Phương thức static thường dùng để viết các chức năng chung, không phụ thuộc vào dữ liệu của đối tượng cụ
+                thể.
+            </p>
+            <pre><code>class MathUtil {
+    public static int tinhTong(int a, int b) {
+        return a + b;
+    }
+}
+
+public class DemoStaticMethod {
+    public static void main(String[] args) {
+        int ketQua = MathUtil.tinhTong(10, 20);
+        System.out.println(ketQua); // 30
+    }
+}</code></pre>
+
+            <h3>Khối static</h3>
+            <p>
+                Khối static được thực thi một lần khi class được nạp vào bộ nhớ, trước khi chương trình chạy các phần
+                khác.
+            </p>
+            <pre><code>class DemoStaticBlock {
+    static int x;
+
+    static {
+        x = 100;
+        System.out.println("Khối static chạy lần đầu");
+    }
+
+    public static void main(String[] args) {
+        System.out.println("x = " + x);
+    }
+}</code></pre>
+
+            <div class="important">
+                <strong>Chú ý:</strong>
+                <ul>
+                    <li>Phương thức static không thể truy cập biến instance trực tiếp.</li>
+                    <li>Phương thức static không thể sử dụng this hoặc super.</li>
+                    <li>Biến static được chia sẻ cho tất cả đối tượng của class.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>3. Từ khóa this trong Java</h2>
+
+            <div class="concept">
+                <strong>Khái niệm:</strong> this là tham chiếu đến đối tượng hiện tại đang được thực thi trong class. Nó
+                giúp Java phân biệt rõ giữa biến của đối tượng và biến local hoặc tham số truyền vào.
+            </div>
+
+            <h3>Khi nào nên dùng this?</h3>
+            <ul>
+                <li>Khi tên biến instance trùng với tên tham số của constructor hoặc phương thức.</li>
+                <li>Khi cần gọi constructor khác trong cùng class.</li>
+                <li>Khi cần truy cập dữ liệu của đối tượng hiện tại.</li>
+            </ul>
+
+            <h3>Ví dụ 1: Dùng this để phân biệt biến và tham số</h3>
+            <pre><code>class SinhVien {
+    String ten;
+
+    SinhVien(String ten) {
+        this.ten = ten;
+    }
+
+    void inThongTin() {
+        System.out.println("Ten: " + this.ten);
+    }
+}
+
+public class DemoThis {
+    public static void main(String[] args) {
+        SinhVien sv = new SinhVien("Lan");
+        sv.inThongTin();
+    }
+}</code></pre>
+
+            <h3>Ví dụ 2: Dùng this() để gọi constructor khác</h3>
+            <pre><code>class HinhChuNhat {
+    int chieuDai;
+    int chieuRong;
+
+    HinhChuNhat() {
+        this(10, 20);
+    }
+
+    HinhChuNhat(int chieuDai, int chieuRong) {
+        this.chieuDai = chieuDai;
+        this.chieuRong = chieuRong;
+    }
+
+    void inKichThuoc() {
+        System.out.println(this.chieuDai + " x " + this.chieuRong);
+    }
+}
+
+public class DemoThisConstructor {
+    public static void main(String[] args) {
+        HinhChuNhat hcn = new HinhChuNhat();
+        hcn.inKichThuoc(); // 10 x 20
+    }
+}</code></pre>
+
+            <div class="important">
+                <strong>Chú ý:</strong>
+                <ul>
+                    <li>this không thể được dùng bên trong phương thức static.</li>
+                    <li>this() chỉ dùng để gọi constructor khác trong cùng class.</li>
+                    <li>this thường dùng để tránh nhầm lẫn giữa biến instance và tham số.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>4. Nạp chồng phương thức (Method Overloading)</h2>
+
+            <div class="concept">
+                <strong>Khái niệm:</strong> Nạp chồng phương thức là kỹ thuật cho phép một class định nghĩa nhiều phương
+                thức cùng tên nhưng khác nhau về số lượng tham số hoặc kiểu dữ liệu tham số. Java sẽ tự động chọn phương
+                thức phù hợp khi bạn gọi nó.
+            </div>
+
+            <h3>Điều kiện để nạp chồng phương thức</h3>
+            <ul>
+                <li>Cùng tên phương thức.</li>
+                <li>Khác số lượng tham số, hoặc kiểu tham số.</li>
+                <li>Không được chỉ khác nhau ở kiểu trả về.</li>
+            </ul>
+
+            <h3>Ví dụ minh họa</h3>
+            <pre><code>class TinhToan {
+    int cong(int a, int b) {
+        return a + b;
+    }
+
+    double cong(double a, double b) {
+        return a + b;
+    }
+
+    int cong(int a, int b, int c) {
+        return a + b + c;
+    }
+}
+
+public class DemoOverloading {
+    public static void main(String[] args) {
+        TinhToan tt = new TinhToan();
+
+        System.out.println(tt.cong(2, 3));       // 5
+        System.out.println(tt.cong(2.5, 3.5));   // 6.0
+        System.out.println(tt.cong(1, 2, 3));    // 6
+    }
+}</code></pre>
+
+            <div class="important">
+                <strong>Chú ý:</strong>
+                <ul>
+                    <li>Nạp chồng khác với override.</li>
+                    <li>Nạp chồng xảy ra trong cùng class.</li>
+                    <li>Override xảy ra giữa lớp cha và lớp con.</li>
+                    <li>Khi gọi phương thức, Java sẽ chọn phiên bản phù hợp với tham số được truyền vào.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>5. Bài tập tổng hợp</h2>
+
+            <div class="exercise">
+                <span class="tag">Bài 1</span>
+                Viết chương trình quản lý danh sách sinh viên bằng List. Hãy thêm 5 sinh viên, in danh sách ra màn hình,
+                sửa tên của một sinh viên và xóa một sinh viên theo vị trí.
+            </div>
+
+            <div class="exercise">
+                <span class="tag">Bài 2</span>
+                Tạo class <strong>SanPham</strong> có thuộc tính ten, gia, va bien static soLuongSanPham. Viết phương
+                thức static để tăng số lượng và in ra thông tin sản phẩm.
+            </div>
+
+            <div class="exercise">
+                <span class="tag">Bài 3</span>
+                Viết class <strong>TinhToan</strong> gồm các phương thức static: tong, hieu, tich, chia. Gọi các phương
+                thức này thông qua tên class và in kết quả ra console.
+            </div>
+
+            <div class="exercise">
+                <span class="tag">Bài 4</span>
+                Viết class <strong>HinhChuNhat</strong> với constructor rỗng và constructor có tham số. Dùng this để gán
+                giá trị và phương thức inKichThuoc để in ra kích thước.
+            </div>
+
+            <div class="exercise">
+                <span class="tag">Bài 5</span>
+                Viết class <strong>Calculator</strong> có phương thức cong được nạp chồng theo các dạng: cong(int, int),
+                cong(double, double), cong(int, int, int). In từng kết quả khi gọi phương thức.
+            </div>
+
+            <div class="exercise">
+                <span class="tag">Bài 6</span>
+                Dùng ArrayList lưu 6 số nguyên. Tính tổng các số chẵn, xóa phần tử ở vị trí 2, in danh sách sau khi xóa
+                và in tổng số chẵn còn lại.
+            </div>
+
+            <div class="exercise">
+                <span class="tag">Bài 7</span>
+                Tạo class <strong>XeMay</strong> với thuộc tính hang, mauSac, soKhung. Viết hai constructor, một
+                constructor rỗng và một constructor có tham số. Dùng this và nạp chồng phương thức thongTin() để in
+                thông tin.
+            </div>
+        </section>
+    </main>
+
+    <div class="container footer">
+        Designed for HIT-JAVA-PUBLIC-2026 · Java Core Study Notes
+    </div>
+</body>
+
+</html>
