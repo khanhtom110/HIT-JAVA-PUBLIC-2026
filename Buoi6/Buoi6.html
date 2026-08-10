@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buổi 6 — HAS-A, Mảng đối tượng, Kế thừa, Ghi đè | Java Public 2026</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+  <style>
+    :root {
+      --ink: #16233B;
+      --ink-soft: #4A5A73;
+      --ink-faint: #8494AA;
+      --paper: #EDF0F4;
+      --surface: #FFFFFF;
+      --line: #D6DDE6;
+      --java-blue: #4A7A9B;
+      --java-blue-deep: #2F5C7A;
+      --java-orange: #E08A12;
+      --java-orange-soft: #FDF3E0;
+      --editor: #22293A;
+      --editor-bar: #1A2030;
+      --warn-bg: #FDF3E0;
+      --note-bg: #EAF1F6;
+
+      --f-display: "Be Vietnam Pro", system-ui, sans-serif;
+      --f-body: "Source Serif 4", Georgia, serif;
+      --f-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+      --w: min(760px, 100%);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 24px
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      html {
+        scroll-behavior: auto
+      }
+
+      * {
+        animation: none !important;
+        transition: none !important
+      }
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--f-body);
+      font-size: 17px;
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------- Khung trang ---------- */
+    .shell {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 0;
+      max-width: 1180px;
+      margin: 0 auto
+    }
+
+    /* ---------- Mục lục ---------- */
+    .toc {
+      position: sticky;
+      top: 0;
+      align-self: start;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 40px 24px 40px 28px;
+      border-right: 1px solid var(--line);
+      font-family: var(--f-display);
+    }
+
+    .toc-brand {
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--java-blue);
+      font-weight: 700;
+      margin-bottom: 6px
+    }
+
+    .toc-title {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.35;
+      margin: 0 0 22px
+    }
+
+    .toc a {
+      display: block;
+      text-decoration: none;
+      color: var(--ink-soft);
+      font-size: 13.5px;
+      line-height: 1.45;
+      padding: 6px 0 6px 14px;
+      border-left: 2px solid transparent;
+      transition: .18s;
+    }
+
+    .toc a:hover {
+      color: var(--ink)
+    }
+
+    .toc a.on {
+      color: var(--java-blue-deep);
+      border-left-color: var(--java-orange);
+      font-weight: 600
+    }
+
+    .toc a.sub {
+      padding-left: 26px;
+      font-size: 12.5px
+    }
+
+    .toc-sep {
+      height: 1px;
+      background: var(--line);
+      margin: 14px 0
+    }
+
+    /* ---------- Nội dung ---------- */
+    main {
+      padding: 0 40px 100px;
+      min-width: 0
+    }
+
+    .wrap {
+      width: var(--w);
+      margin: 0 auto
+    }
+
+    /* ---------- Hero ---------- */
+    header.hero {
+      padding: 64px 0 40px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 44px
+    }
+
+    .eyebrow {
+      font-family: var(--f-display);
+      font-size: 11.5px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--java-blue);
+      font-weight: 700
+    }
+
+    h1 {
+      font-family: var(--f-display);
+      font-weight: 800;
+      font-size: clamp(30px, 4.6vw, 44px);
+      line-height: 1.16;
+      letter-spacing: -.02em;
+      margin: 14px 0 18px
+    }
+
+    .lede {
+      font-size: 18px;
+      color: var(--ink-soft);
+      margin: 0 0 26px;
+      max-width: 60ch
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px
+    }
+
+    .chip {
+      font-family: var(--f-mono);
+      font-size: 12px;
+      padding: 5px 11px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      color: var(--java-blue-deep);
+    }
+
+    /* ---------- Bảng mục tiêu ---------- */
+    .goals {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 26px 30px;
+      margin: 0 0 20px
+    }
+
+    .goals h2 {
+      margin-top: 0
+    }
+
+    .goals ol {
+      margin: 0;
+      padding-left: 22px
+    }
+
+    .goals li {
+      margin-bottom: 8px
+    }
+
+    /* ---------- Tiêu đề ---------- */
+    section {
+      scroll-margin-top: 20px
+    }
+
+    h2 {
+      font-family: var(--f-display);
+      font-weight: 800;
+      font-size: 27px;
+      line-height: 1.25;
+      letter-spacing: -.015em;
+      margin: 56px 0 18px;
+    }
+
+    h2 .num {
+      display: inline-block;
+      font-family: var(--f-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--java-orange);
+      vertical-align: middle;
+      margin-right: 10px;
+      border: 1px solid var(--java-orange);
+      border-radius: 3px;
+      padding: 2px 7px;
+    }
+
+    h3 {
+      font-family: var(--f-display);
+      font-weight: 700;
+      font-size: 19px;
+      margin: 36px 0 12px;
+      letter-spacing: -.01em
+    }
+
+    h4 {
+      font-family: var(--f-display);
+      font-weight: 600;
+      font-size: 16px;
+      margin: 26px 0 10px;
+      color: var(--ink-soft)
+    }
+
+    p {
+      margin: 0 0 16px
+    }
+
+    ul,
+    ol {
+      margin: 0 0 18px;
+      padding-left: 24px
+    }
+
+    li {
+      margin-bottom: 7px
+    }
+
+    strong {
+      font-weight: 600;
+      color: var(--ink)
+    }
+
+    code {
+      font-family: var(--f-mono);
+      font-size: .87em;
+      background: #E2E8F0;
+      padding: 2px 5px;
+      border-radius: 3px;
+      color: var(--java-blue-deep)
+    }
+
+    /* ---------- Khối code kiểu IDE ---------- */
+    .editor {
+      margin: 20px 0 24px;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(22, 35, 59, .14)
+    }
+
+    .tab {
+      background: var(--editor-bar);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px 0 0;
+      font-family: var(--f-mono);
+      font-size: 12px;
+    }
+
+    .tab .name {
+      background: var(--editor);
+      color: #C9D4E4;
+      padding: 9px 16px;
+      border-top: 2px solid var(--java-orange);
+    }
+
+    .tab .copy {
+      background: none;
+      border: none;
+      color: #7A8AA3;
+      font-family: var(--f-mono);
+      font-size: 11px;
+      cursor: pointer;
+      padding: 6px 8px;
+      letter-spacing: .04em;
+    }
+
+    .tab .copy:hover {
+      color: #C9D4E4
+    }
+
+    .editor pre {
+      margin: 0
+    }
+
+    .editor pre code.hljs {
+      background: var(--editor);
+      padding: 18px 20px;
+      font-size: 13.5px;
+      line-height: 1.68;
+      display: block;
+      overflow-x: auto
+    }
+
+    .out {
+      margin: -24px 0 24px;
+      background: var(--editor-bar);
+      color: #9FB3C8;
+      font-family: var(--f-mono);
+      font-size: 12.5px;
+      line-height: 1.7;
+      padding: 14px 20px;
+      border-top: 1px solid #313A4E;
+      white-space: pre-wrap;
+      border-radius: 0 0 5px 5px;
+    }
+
+    .out .lbl {
+      display: block;
+      color: #5E6C82;
+      font-size: 10.5px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 8px
+    }
+
+    /* ---------- Hộp lưu ý ---------- */
+    .box {
+      border-radius: 4px;
+      padding: 20px 24px;
+      margin: 24px 0;
+      border: 1px solid var(--line);
+      background: var(--surface)
+    }
+
+    .box> :last-child {
+      margin-bottom: 0
+    }
+
+    .box-title {
+      font-family: var(--f-display);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin: 0 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .warn {
+      background: var(--warn-bg);
+      border-color: #EFD9AE
+    }
+
+    .warn .box-title {
+      color: #A96B06
+    }
+
+    .note {
+      background: var(--note-bg);
+      border-color: #C7DAE6
+    }
+
+    .note .box-title {
+      color: var(--java-blue-deep)
+    }
+
+    .tip {
+      border-left: 3px solid var(--java-blue);
+      background: var(--surface);
+      padding-left: 21px
+    }
+
+    .tip .box-title {
+      color: var(--java-blue-deep)
+    }
+
+    /* ---------- Signature: thẻ IS-A / HAS-A ---------- */
+    .decide {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 28px 0
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 22px 24px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px
+    }
+
+    .card.isa::before {
+      background: var(--java-blue)
+    }
+
+    .card.hasa::before {
+      background: var(--java-orange)
+    }
+
+    .card .k {
+      font-family: var(--f-mono);
+      font-size: 12px;
+      letter-spacing: .1em;
+      color: var(--ink-faint);
+      margin-bottom: 6px
+    }
+
+    .card .q {
+      font-family: var(--f-display);
+      font-weight: 800;
+      font-size: 19px;
+      margin-bottom: 12px;
+      line-height: 1.3
+    }
+
+    .card .ex {
+      font-family: var(--f-mono);
+      font-size: 12.5px;
+      color: var(--java-blue-deep);
+      background: #F1F5F9;
+      padding: 8px 10px;
+      border-radius: 3px;
+      line-height: 1.6
+    }
+
+    .card p {
+      font-size: 15px;
+      color: var(--ink-soft);
+      margin-bottom: 12px
+    }
+
+    /* ---------- Sơ đồ ---------- */
+    .diagram {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 26px 20px;
+      margin: 24px 0;
+      text-align: center;
+      overflow-x: auto
+    }
+
+    .diagram .cap {
+      font-family: var(--f-display);
+      font-size: 12.5px;
+      color: var(--ink-faint);
+      margin-top: 16px;
+      letter-spacing: .02em
+    }
+
+    .mermaid {
+      display: flex;
+      justify-content: center
+    }
+
+    /* ---------- Bảng ---------- */
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 22px 0;
+      font-size: 15px;
+      background: var(--surface);
+      border: 1px solid var(--line)
+    }
+
+    .tbl th {
+      font-family: var(--f-display);
+      font-weight: 700;
+      font-size: 13px;
+      text-align: left;
+      padding: 12px 14px;
+      background: #E4EAF1;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tbl td {
+      padding: 11px 14px;
+      border-bottom: 1px solid #E8EDF2;
+      vertical-align: top
+    }
+
+    .tbl tr:last-child td {
+      border-bottom: none
+    }
+
+    .tbl td code {
+      font-size: 12.5px
+    }
+
+    .tbl .c {
+      text-align: center
+    }
+
+    .wrap-tbl {
+      overflow-x: auto;
+      margin: 22px 0
+    }
+
+    .wrap-tbl .tbl {
+      margin: 0;
+      min-width: 520px
+    }
+
+    /* ---------- Bài tập ---------- */
+    .ex-item {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      margin: 24px 0;
+      overflow: hidden
+    }
+
+    .ex-head {
+      padding: 20px 26px 0
+    }
+
+    .ex-tag {
+      font-family: var(--f-mono);
+      font-size: 11.5px;
+      letter-spacing: .1em;
+      color: var(--java-orange);
+      font-weight: 600
+    }
+
+    .ex-head h3 {
+      margin: 6px 0 14px;
+      font-size: 19px
+    }
+
+    .ex-body {
+      padding: 0 26px 6px
+    }
+
+    .ex-hint {
+      background: #F4F7FA;
+      border-top: 1px solid var(--line);
+      padding: 18px 26px
+    }
+
+    .ex-hint .box-title {
+      color: var(--java-blue-deep);
+      margin-bottom: 10px
+    }
+
+    .ex-hint ul {
+      margin-bottom: 0;
+      font-size: 15px
+    }
+
+    /* ---------- Kết ---------- */
+    footer {
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-size: 15px
+    }
+
+    footer .qq {
+      font-family: var(--f-display);
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--ink);
+      border-left: 3px solid var(--java-orange);
+      padding-left: 18px;
+      margin: 20px 0;
+      line-height: 1.5;
+    }
+
+    .sig {
+      font-family: var(--f-mono);
+      font-size: 12px;
+      color: var(--ink-faint);
+      margin-top: 36px;
+      letter-spacing: .03em
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width:900px) {
+      .shell {
+        grid-template-columns: 1fr
+      }
+
+      .toc {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        padding: 24px 22px
+      }
+
+      .toc a {
+        display: inline-block;
+        border-left: none;
+        border-bottom: 2px solid transparent;
+        padding: 4px 10px 4px 0;
+        margin-right: 6px
+      }
+
+      .toc a.on {
+        border-left: none;
+        border-bottom-color: var(--java-orange)
+      }
+
+      .toc a.sub {
+        display: none
+      }
+
+      main {
+        padding: 0 22px 70px
+      }
+
+      .decide {
+        grid-template-columns: 1fr
+      }
+
+      header.hero {
+        padding: 40px 0 32px
+      }
+    }
+
+    /* ---------- In ---------- */
+    @media print {
+
+      .toc,
+      .tab .copy {
+        display: none
+      }
+
+      .shell {
+        display: block
+      }
+
+      body {
+        background: #fff;
+        font-size: 11pt
+      }
+
+      .editor pre code.hljs {
+        background: #F4F6F8;
+        color: #16233B
+      }
+
+      .editor {
+        box-shadow: none;
+        border: 1px solid #ccc
+      }
+
+      section,
+      h2 {
+        break-inside: auto;
+        page-break-inside: auto
+      }
+
+      .box,
+      .ex-item,
+      .diagram {
+        break-inside: avoid
+      }
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--java-orange);
+      outline-offset: 2px
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="shell">
+
+    <nav class="toc" aria-label="Mục lục">
+      <div class="toc-brand">CLB Tin học HIT · Java Public 2026</div>
+      <p class="toc-title">Buổi 6 — HAS-A, Mảng đối tượng, Kế thừa, Ghi đè</p>
+      <a href="#muctieu">Mục tiêu buổi học</a>
+      <div class="toc-sep"></div>
+      <a href="#p1">1. Quan hệ HAS-A</a>
+      <a href="#p2">2. Mảng đối tượng</a>
+      <a href="#p3">3. Tính kế thừa</a>
+      <a href="#p4">4. Ghi đè phương thức</a>
+      <div class="toc-sep"></div>
+      <a href="#tongket">Tổng kết</a>
+      <a href="#baitap">Bài tập luyện tập</a>
+      <a href="#chuanbi">Chuẩn bị buổi 7</a>
+    </nav>
+
+    <main>
+      <div class="wrap">
+
+        <header class="hero">
+          <div class="eyebrow">Buổi 6</div>
+          <h1>Quan hệ HAS-A, Mảng đối tượng, Kế thừa và Ghi đè phương thức</h1>
+          <p class="lede">Bốn khái niệm này là bộ khung để mô tả thế giới thật bằng code. Toàn bộ ví dụ trong buổi học
+            xoay quanh một hệ thống <strong>cửa hàng bán hàng</strong>: sản phẩm, khách hàng và đơn hàng.</p>
+          <div class="chips">
+            <span class="chip">Product</span>
+            <span class="chip">Customer</span>
+            <span class="chip">Order</span>
+            <span class="chip">extends</span>
+            <span class="chip">@Override</span>
+          </div>
+        </header>
+
+        <section id="muctieu">
+          <div class="goals">
+            <h2 style="margin-top:0;font-size:22px"><span class="num">00</span>Mục tiêu buổi học</h2>
+            <ol>
+              <li>Hiểu và cài đặt được quan hệ <strong>HAS-A</strong> — một lớp "có" đối tượng của lớp khác.</li>
+              <li>Khai báo, khởi tạo và duyệt được <strong>mảng đối tượng</strong>, hiểu vì sao <code>ArrayList</code>
+                thường tiện hơn.</li>
+              <li>Viết được lớp con bằng <strong>kế thừa</strong> (<code>extends</code>), gọi được constructor cha bằng
+                <code>super</code>.</li>
+              <li><strong>Ghi đè</strong> phương thức của lớp cha, đặc biệt là <code>toString()</code>.</li>
+            </ol>
+            <p style="margin-bottom:0;color:var(--ink-soft);font-size:15px"><strong>Cần có từ buổi trước:</strong>
+              class, object, thuộc tính, phương thức, constructor, getter/setter, <code>List</code> và
+              <code>ArrayList</code>.</p>
+          </div>
+        </section>
+
+        <!-- ============ PHẦN 1 ============ -->
+        <section id="p1">
+          <h2><span class="num">01</span>Quan hệ HAS-A</h2>
+
+          <h3>1.1 · Khái niệm</h3>
+          <p>Trong thực tế, một sự vật thường <strong>được tạo thành từ</strong> những sự vật khác:</p>
+          <ul>
+            <li>Một chiếc xe <strong>có</strong> một động cơ.</li>
+            <li>Một đơn hàng <strong>có</strong> một khách hàng và <strong>có</strong> nhiều sản phẩm.</li>
+          </ul>
+          <p>Trong Java, ta mô tả điều đó bằng cách cho lớp này <strong>chứa đối tượng của lớp kia làm thuộc
+              tính</strong>. Đó chính là quan hệ <strong>HAS-A</strong>, còn gọi là <em>Composition</em> — quan hệ thành
+            phần.</p>
+
+          <div class="box tip">
+            <p class="box-title">Cách nhận biết nhanh</p>
+            <p style="margin-bottom:0">Đọc thành câu "A <strong>có một / có nhiều</strong> B". Nếu nghe hợp lý thì dùng
+              HAS-A. Ví dụ: "Đơn hàng có một khách hàng" → <code>Order</code> chứa <code>Customer</code>.</p>
+          </div>
+
+          <h3>1.2 · Sơ đồ quan hệ</h3>
+          <div class="diagram">
+            <pre class="mermaid">
+classDiagram
+    class Customer {
+        -String name
+        -String phone
+        +getName() String
+    }
+    class Product {
+        -String name
+        -double price
+        +getPrice() double
+    }
+    class Order {
+        -String orderId
+        -Customer customer
+        -List~Product~ items
+        +addItem(Product p) void
+        +getTotal() double
+    }
+    Order "1" *-- "1" Customer : has-a
+    Order "1" *-- "n" Product : has-many
+  </pre>
+            <div class="cap">Một <code>Order</code> có một <code>Customer</code> và có nhiều <code>Product</code>.</div>
+          </div>
+
+          <h3>1.3 · Ví dụ code</h3>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Customer.java</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">public class Customer {
+    private String name;
+    private String phone;
+
+    public Customer(String name, String phone) {
+        this.name = name;
+        this.phone = phone;
+    }
+
+    public String getName()  { return name; }
+    public String getPhone() { return phone; }
+}</code></pre>
+          </div>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Product.java</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">public class Product {
+    private String name;
+    private double price;
+
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public String getName()  { return name; }
+    public double getPrice() { return price; }
+}</code></pre>
+          </div>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Order.java</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">import java.util.ArrayList;
+import java.util.List;
+
+public class Order {
+    private String orderId;
+    private Customer customer;      // HAS-A: 1 don hang co 1 khach hang
+    private List&lt;Product&gt; items;    // HAS-A: 1 don hang co nhieu san pham
+
+    public Order(String orderId, Customer customer) {
+        this.orderId = orderId;
+        this.customer = customer;
+        this.items = new ArrayList&lt;&gt;();   // khoi tao ngay, tranh null
+    }
+
+    public void addItem(Product p) {
+        items.add(p);
+    }
+
+    public double getTotal() {
+        double total = 0;
+        for (Product p : items) {
+            total += p.getPrice();
+        }
+        return total;
+    }
+
+    public void printInfo() {
+        System.out.println("Don hang: " + orderId);
+        System.out.println("Khach hang: " + customer.getName()
+                         + " - " + customer.getPhone());
+        System.out.println("Danh sach san pham:");
+        for (Product p : items) {
+            System.out.println("  - " + p.getName() + ": " + p.getPrice());
+        }
+        System.out.println("Tong tien: " + getTotal());
+    }
+}</code></pre>
+          </div>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Main.java</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Customer c = new Customer("Nguyen Van A", "0987654321");
+
+        Order order = new Order("DH001", c);
+        order.addItem(new Product("Ban phim co", 1200000));
+        order.addItem(new Product("Chuot khong day", 350000));
+
+        order.printInfo();
+    }
+}</code></pre>
+          </div>
+          <div class="out"><span class="lbl">Kết quả chạy</span>Don hang: DH001
+            Khach hang: Nguyen Van A - 0987654321
+            Danh sach san pham:
+            - Ban phim co: 1200000.0
+            - Chuot khong day: 350000.0
+            Tong tien: 1550000.0</div>
+
+          <h3>1.4 · Lưu ý</h3>
+          <div class="box warn">
+            <p class="box-title">⚠ Những chỗ dễ sai</p>
+            <ul style="margin-bottom:0">
+              <li><strong>Luôn khởi tạo <code>List</code> trong constructor.</strong> Quên
+                <code>this.items = new ArrayList&lt;&gt;();</code> thì <code>items</code> mang giá trị
+                <code>null</code>, gọi <code>items.add(...)</code> sẽ ném <strong>NullPointerException</strong>. Đây là
+                lỗi phổ biến nhất khi mới học HAS-A.</li>
+              <li><strong>Kiểm tra <code>null</code> trước khi gọi phương thức của đối tượng thành phần.</strong> Nếu
+                <code>customer == null</code> thì <code>customer.getName()</code> lỗi ngay.</li>
+              <li><strong>Đối tượng thành phần vẫn là một biến tham chiếu.</strong> Khi viết
+                <code>new Order("DH001", c)</code>, biến <code>customer</code> bên trong <code>order</code> và biến
+                <code>c</code> bên ngoài <strong>cùng trỏ tới một đối tượng</strong>. Sửa qua biến này thì biến kia cũng
+                thấy đổi.</li>
+              <li><strong>Đừng nhồi mọi thứ vào một lớp.</strong> Thấy <code>Order</code> có <code>customerName</code>,
+                <code>customerPhone</code>, <code>customerAddress</code>… là dấu hiệu nên tách thành lớp
+                <code>Customer</code> riêng.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ============ PHẦN 2 ============ -->
+        <section id="p2">
+          <h2><span class="num">02</span>Mảng đối tượng</h2>
+
+          <h3>2.1 · Mảng đối tượng là gì?</h3>
+          <p>Buổi trước bạn đã dùng mảng số nguyên <code>int[]</code>. Mảng đối tượng cũng tương tự, chỉ khác là mỗi
+            phần tử là <strong>một tham chiếu tới đối tượng</strong>.</p>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Khai báo</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">Product[] products = new Product[3];   // 3 o, TAT CA dang la null</code></pre>
+          </div>
+
+          <div class="box note">
+            <p class="box-title">Điểm cực kỳ quan trọng</p>
+            <p style="margin-bottom:0">Dòng trên <strong>không</strong> tạo ra 3 sản phẩm. Nó chỉ tạo ra 3 "ô trống" để
+              chứa địa chỉ của sản phẩm. Muốn có sản phẩm thật, phải <code>new Product(...)</code> cho từng ô.</p>
+          </div>
+
+          <h3>2.2 · Khai báo và khởi tạo</h3>
+          <div class="editor">
+            <div class="tab"><span class="name">Main.java</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        // Cach 1: tao mang rong roi gan tung phan tu
+        Product[] products = new Product[3];
+        products[0] = new Product("Ban phim co", 1200000);
+        products[1] = new Product("Chuot khong day", 350000);
+        products[2] = new Product("Tai nghe", 800000);
+
+        // Cach 2: khai bao va khoi tao cung luc
+        Product[] products2 = {
+            new Product("Man hinh", 3500000),
+            new Product("Webcam", 900000)
+        };
+
+        // Duyet bang for thuong (khi can biet chi so)
+        for (int i = 0; i &lt; products.length; i++) {
+            System.out.println(i + ". " + products[i].getName());
+        }
+
+        // Duyet bang for-each (khi chi can doc tung phan tu)
+        for (Product p : products) {
+            System.out.println(p.getName() + " - " + p.getPrice());
+        }
+    }
+}</code></pre>
+          </div>
+
+          <h3>2.3 · Xử lý dữ liệu trên mảng đối tượng</h3>
+          <div class="editor">
+            <div class="tab"><span class="name">Xử lý dữ liệu</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">// Tinh tong gia tri
+double total = 0;
+for (Product p : products) {
+    total += p.getPrice();
+}
+System.out.println("Tong: " + total);
+
+// Tim san pham dat nhat
+Product maxProduct = products[0];
+for (Product p : products) {
+    if (p.getPrice() &gt; maxProduct.getPrice()) {
+        maxProduct = p;
+    }
+}
+System.out.println("Dat nhat: " + maxProduct.getName());
+
+// Tim theo ten
+String keyword = "Tai nghe";
+Product found = null;
+for (Product p : products) {
+    if (p.getName().equals(keyword)) {   // dung equals, khong dung ==
+        found = p;
+        break;
+    }
+}
+if (found != null) {
+    System.out.println("Tim thay: " + found.getPrice());
+} else {
+    System.out.println("Khong tim thay san pham");
+}</code></pre>
+          </div>
+
+          <h3>2.4 · Nhược điểm của mảng thuần → chuyển sang ArrayList</h3>
+          <p>Mảng có <strong>kích thước cố định</strong>. Muốn thêm sản phẩm thứ 4 vào mảng 3 phần tử, bạn phải tạo mảng
+            mới và copy sang — rất phiền. <code>ArrayList</code> sinh ra để giải quyết chuyện đó.</p>
+
+          <div class="editor">
+            <div class="tab"><span class="name">ArrayList</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">import java.util.ArrayList;
+import java.util.List;
+
+List&lt;Product&gt; products = new ArrayList&lt;&gt;();
+
+products.add(new Product("Ban phim co", 1200000));    // them
+products.add(new Product("Chuot khong day", 350000));
+
+System.out.println(products.size());              // so phan tu
+System.out.println(products.get(0).getName());    // lay phan tu
+products.remove(0);                               // xoa
+
+for (Product p : products) {                      // for-each dung y het mang
+    System.out.println(p.getName());
+}</code></pre>
+          </div>
+
+          <h3>2.5 · Bảng so sánh</h3>
+          <div class="wrap-tbl">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Tiêu chí</th>
+                  <th>Mảng <code>Product[]</code></th>
+                  <th><code>ArrayList&lt;Product&gt;</code></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Kích thước</td>
+                  <td>Cố định khi tạo</td>
+                  <td>Tự động co giãn</td>
+                </tr>
+                <tr>
+                  <td>Lấy số phần tử</td>
+                  <td><code>products.length</code> — thuộc tính</td>
+                  <td><code>products.size()</code> — phương thức</td>
+                </tr>
+                <tr>
+                  <td>Lấy phần tử</td>
+                  <td><code>products[0]</code></td>
+                  <td><code>products.get(0)</code></td>
+                </tr>
+                <tr>
+                  <td>Gán / thêm</td>
+                  <td><code>products[0] = p;</code></td>
+                  <td><code>products.add(p);</code></td>
+                </tr>
+                <tr>
+                  <td>Xóa phần tử</td>
+                  <td>Không có sẵn, phải tự xử lý</td>
+                  <td><code>products.remove(0);</code></td>
+                </tr>
+                <tr>
+                  <td>Chứa kiểu nguyên thủy</td>
+                  <td>Được: <code>int[]</code>, <code>double[]</code></td>
+                  <td>Không, phải dùng <code>Integer</code>, <code>Double</code></td>
+                </tr>
+                <tr>
+                  <td>Khi nào dùng</td>
+                  <td>Biết chắc số lượng, cần hiệu năng cao</td>
+                  <td>Đa số trường hợp thực tế</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>2.6 · Lưu ý</h3>
+          <div class="box warn">
+            <p class="box-title">⚠ Những chỗ dễ sai</p>
+            <ul style="margin-bottom:0">
+              <li><strong><code>length</code> không có ngoặc, <code>size()</code> có ngoặc.</strong> Viết
+                <code>products.length()</code> cho mảng hoặc <code>products.size</code> cho <code>ArrayList</code> đều
+                là lỗi biên dịch.</li>
+              <li><strong>Phần tử mảng đối tượng mặc định là <code>null</code>.</strong> Nếu <code>new Product[3]</code>
+                mà chỉ gán 2 ô rồi duyệt for-each gọi <code>p.getName()</code> → <strong>NullPointerException</strong>.
+              </li>
+              <li><strong>Chỉ số mảng bắt đầu từ 0</strong> và kết thúc ở <code>length - 1</code>. Truy cập
+                <code>products[3]</code> trên mảng 3 phần tử → <strong>ArrayIndexOutOfBoundsException</strong>.</li>
+              <li><strong>So sánh chuỗi dùng <code>.equals()</code>, không dùng <code>==</code>.</strong> Phép
+                <code>==</code> so sánh địa chỉ, thường cho <code>false</code> ngoài ý muốn.</li>
+              <li><strong><code>ArrayList</code> không chứa kiểu nguyên thủy.</strong> <code>List&lt;int&gt;</code> là
+                sai, phải là <code>List&lt;Integer&gt;</code>.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ============ PHẦN 3 ============ -->
+        <section id="p3">
+          <h2><span class="num">03</span>Tính kế thừa</h2>
+
+          <h3>3.1 · Khái niệm</h3>
+          <p>Cửa hàng của chúng ta bán nhiều loại hàng: sách, đồ điện tử, thực phẩm. Tất cả đều có <code>name</code> và
+            <code>price</code>, nhưng sách còn có tác giả và số trang, đồ điện tử còn có thời hạn bảo hành.</p>
+          <p>Nếu viết 3 lớp riêng biệt, ta phải <strong>lặp lại</strong> <code>name</code>, <code>price</code>,
+            getter/setter ở cả 3 nơi. <strong>Kế thừa</strong> cho phép gom phần chung vào một lớp <strong>cha</strong>,
+            rồi các lớp <strong>con</strong> thừa hưởng lại và bổ sung phần riêng.</p>
+
+          <div class="decide">
+            <div class="card isa">
+              <div class="k">IS-A</div>
+              <div class="q">A <em>là một</em> B?</div>
+              <p>Đúng → dùng kế thừa. Lớp con thừa hưởng toàn bộ thuộc tính và phương thức của lớp cha.</p>
+              <div class="ex">"Sách <b>là một</b> sản phẩm" ✔<br>class Book extends Product</div>
+            </div>
+            <div class="card hasa">
+              <div class="k">HAS-A</div>
+              <div class="q">A <em>có một</em> B?</div>
+              <p>Đúng → dùng quan hệ thành phần. Lớp này chứa đối tượng lớp kia làm thuộc tính.</p>
+              <div class="ex">"Đơn hàng <b>có một</b> khách hàng" ✔<br>class Order { Customer customer; }</div>
+            </div>
+          </div>
+
+          <h3>3.2 · Sơ đồ kế thừa</h3>
+          <div class="diagram">
+            <pre class="mermaid">
+classDiagram
+    class Product {
+        #String name
+        #double price
+        +Product(String, double)
+        +getName() String
+        +getPrice() double
+        +showInfo() void
+    }
+    class Book {
+        -String author
+        -int pages
+        +showInfo() void
+    }
+    class Electronic {
+        -int warrantyMonths
+        +showInfo() void
+    }
+    Product &lt;|-- Book : is-a
+    Product &lt;|-- Electronic : is-a
+  </pre>
+            <div class="cap">Mũi tên tam giác rỗng luôn trỏ từ lớp con lên lớp cha.</div>
+          </div>
+
+          <h3>3.3 · Cú pháp và ví dụ</h3>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Product.java — lớp cha</span><button class="copy">Sao chép</button>
+            </div>
+            <pre><code class="language-java">public class Product {
+    protected String name;    // protected: lop con truy cap duoc
+    protected double price;
+
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public String getName()  { return name; }
+    public double getPrice() { return price; }
+
+    public void showInfo() {
+        System.out.println(name + " - " + price + " VND");
+    }
+}</code></pre>
+          </div>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Book.java — lớp con</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">public class Book extends Product {
+    private String author;
+    private int pages;
+
+    public Book(String name, double price, String author, int pages) {
+        super(name, price);   // BAT BUOC, va phai o DONG DAU TIEN
+        this.author = author;
+        this.pages = pages;
+    }
+
+    public void showAuthor() {          // phuong thuc rieng cua Book
+        System.out.println("Tac gia: " + author);
+    }
+}</code></pre>
+          </div>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Electronic.java</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">public class Electronic extends Product {
+    private int warrantyMonths;
+
+    public Electronic(String name, double price, int warrantyMonths) {
+        super(name, price);
+        this.warrantyMonths = warrantyMonths;
+    }
+
+    public int getWarrantyMonths() { return warrantyMonths; }
+}</code></pre>
+          </div>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Main.java</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Book b = new Book("Clean Code", 450000, "Robert C. Martin", 464);
+        b.showInfo();     // ke thua tu Product, dung luon
+        b.showAuthor();   // phuong thuc rieng cua Book
+
+        Electronic e = new Electronic("Tai nghe Sony", 800000, 12);
+        e.showInfo();
+        System.out.println("Bao hanh: " + e.getWarrantyMonths() + " thang");
+    }
+}</code></pre>
+          </div>
+
+          <h3>3.4 · Từ khóa super</h3>
+          <div class="editor">
+            <div class="tab"><span class="name">Hai công dụng của super</span><button class="copy">Sao chép</button>
+            </div>
+            <pre><code class="language-java">public class Book extends Product {
+    private String author;
+
+    public Book(String name, double price, String author) {
+        super(name, price);          // (1) goi CONSTRUCTOR cua lop cha
+        this.author = author;
+    }
+
+    public void showFullInfo() {
+        super.showInfo();            // (2) goi PHUONG THUC cua lop cha
+        System.out.println("Tac gia: " + author);
+    }
+}</code></pre>
+          </div>
+
+          <h3>3.5 · Phạm vi truy cập với kế thừa</h3>
+          <div class="wrap-tbl">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Từ khóa</th>
+                  <th class="c">Cùng lớp</th>
+                  <th class="c">Lớp con</th>
+                  <th class="c">Cùng package</th>
+                  <th class="c">Bên ngoài</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>private</code></td>
+                  <td class="c">✔</td>
+                  <td class="c">✘</td>
+                  <td class="c">✘</td>
+                  <td class="c">✘</td>
+                </tr>
+                <tr>
+                  <td><em>mặc định</em></td>
+                  <td class="c">✔</td>
+                  <td class="c">✔ cùng package</td>
+                  <td class="c">✔</td>
+                  <td class="c">✘</td>
+                </tr>
+                <tr>
+                  <td><code>protected</code></td>
+                  <td class="c">✔</td>
+                  <td class="c">✔</td>
+                  <td class="c">✔</td>
+                  <td class="c">✘</td>
+                </tr>
+                <tr>
+                  <td><code>public</code></td>
+                  <td class="c">✔</td>
+                  <td class="c">✔</td>
+                  <td class="c">✔</td>
+                  <td class="c">✔</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Muốn lớp con truy cập trực tiếp thuộc tính của cha thì khai báo <code>protected</code>. Nếu để
+            <code>private</code>, lớp con vẫn dùng được qua getter/setter public.</p>
+
+          <h3>3.6 · Lưu ý</h3>
+          <div class="box warn">
+            <p class="box-title">⚠ Những chỗ dễ sai</p>
+            <ul style="margin-bottom:0">
+              <li><strong>Java chỉ cho phép đơn kế thừa.</strong> Một lớp chỉ <code>extends</code> được
+                <strong>một</strong> lớp cha. <code>class A extends B, C</code> là sai cú pháp. Muốn "nhiều cha" thì
+                dùng <code>interface</code> — buổi sau.</li>
+              <li><strong><code>super(...)</code> phải nằm ở dòng đầu tiên</strong> của constructor con. Đặt sau dòng
+                khác sẽ lỗi biên dịch.</li>
+              <li><strong>Không viết <code>super(...)</code> thì Java tự chèn <code>super()</code> không tham
+                  số.</strong> Nên nếu lớp cha chỉ có constructor có tham số, lớp con <strong>bắt buộc</strong> gọi
+                <code>super(...)</code> tường minh.</li>
+              <li><strong>Constructor cha luôn chạy trước constructor con:</strong> <code>Product(...)</code> →
+                <code>Book(...)</code>.</li>
+              <li><strong>Constructor không được kế thừa.</strong> Lớp con phải tự khai báo constructor của mình.</li>
+              <li><strong>Mọi lớp trong Java đều ngầm kế thừa <code>Object</code></strong>, nên đối tượng nào cũng có
+                sẵn <code>toString()</code>, <code>equals()</code>, <code>hashCode()</code>.</li>
+              <li><strong>Đừng lạm dụng kế thừa.</strong> Nếu quan hệ là "có" chứ không phải "là", hãy dùng HAS-A.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ============ PHẦN 4 ============ -->
+        <section id="p4">
+          <h2><span class="num">04</span>Ghi đè phương thức</h2>
+
+          <h3>4.1 · Khái niệm</h3>
+          <p><code>Product.showInfo()</code> chỉ in tên và giá. Nhưng với <code>Book</code>, ta muốn in thêm tác giả.
+            <strong>Ghi đè</strong> là việc lớp con <strong>viết lại</strong> phương thức đã có ở lớp cha, với
+            <strong>cùng tên, cùng tham số, cùng kiểu trả về</strong>, nhưng nội dung khác.</p>
+
+          <h3>4.2 · Ví dụ code</h3>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Product.java</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">public class Product {
+    protected String name;
+    protected double price;
+
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public void showInfo() {
+        System.out.println("San pham: " + name + " - " + price + " VND");
+    }
+}</code></pre>
+          </div>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Book.java</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">public class Book extends Product {
+    private String author;
+    private int pages;
+
+    public Book(String name, double price, String author, int pages) {
+        super(name, price);
+        this.author = author;
+        this.pages = pages;
+    }
+
+    @Override   // annotation bao trinh bien dich kiem tra ho
+    public void showInfo() {
+        System.out.println("Sach: " + name + " - " + price + " VND");
+        System.out.println("  Tac gia: " + author + ", " + pages + " trang");
+    }
+}</code></pre>
+          </div>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Electronic.java</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">public class Electronic extends Product {
+    private int warrantyMonths;
+
+    public Electronic(String name, double price, int warrantyMonths) {
+        super(name, price);
+        this.warrantyMonths = warrantyMonths;
+    }
+
+    @Override
+    public void showInfo() {
+        super.showInfo();   // tan dung lai code cua cha
+        System.out.println("  Bao hanh: " + warrantyMonths + " thang");
+    }
+}</code></pre>
+          </div>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Main.java</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Product p1 = new Book("Clean Code", 450000, "Robert C. Martin", 464);
+        Product p2 = new Electronic("Tai nghe Sony", 800000, 12);
+        Product p3 = new Product("But bi", 5000);
+
+        p1.showInfo();   // goi ban cua Book
+        p2.showInfo();   // goi ban cua Electronic
+        p3.showInfo();   // goi ban cua Product
+    }
+}</code></pre>
+          </div>
+          <div class="out"><span class="lbl">Kết quả chạy</span>Sach: Clean Code - 450000.0 VND
+            Tac gia: Robert C. Martin, 464 trang
+            San pham: Tai nghe Sony - 800000.0 VND
+            Bao hanh: 12 thang
+            San pham: But bi - 5000.0 VND</div>
+
+          <div class="box note">
+            <p class="box-title">Quan sát kỹ chỗ này</p>
+            <p style="margin-bottom:0">Cả 3 biến đều khai báo kiểu <code>Product</code>, nhưng Java gọi đúng phiên bản
+              <code>showInfo()</code> của <strong>đối tượng thật</strong> đằng sau. Đây là nền tảng của <strong>tính đa
+                hình</strong> — nội dung buổi 7.</p>
+          </div>
+
+          <h3>4.3 · Ghi đè toString()</h3>
+          <p><code>toString()</code> là phương thức có sẵn trong <code>Object</code>, được gọi tự động khi bạn
+            <code>System.out.println(object)</code>. Mặc định nó in ra thứ khó đọc kiểu <code>Product@1b6d3586</code>.
+            Hãy ghi đè nó:</p>
+
+          <div class="editor">
+            <div class="tab"><span class="name">Product.java</span><button class="copy">Sao chép</button></div>
+            <pre><code class="language-java">@Override
+public String toString() {
+    return "Product{name='" + name + "', price=" + price + "}";
+}
+
+// Su dung:
+Product p = new Product("But bi", 5000);
+System.out.println(p);   // Product{name='But bi', price=5000.0}</code></pre>
+          </div>
+
+          <div class="box tip">
+            <p class="box-title">Mẹo IntelliJ</p>
+            <p style="margin-bottom:0">Nhấn <code>Alt + Insert</code> → chọn <code>toString()</code> để IDE sinh code tự
+              động.</p>
+          </div>
+
+          <h3>4.4 · Phân biệt Overriding và Overloading</h3>
+          <div class="wrap-tbl">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Overriding — Ghi đè</th>
+                  <th>Overloading — Nạp chồng</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Xảy ra ở đâu</td>
+                  <td>Giữa <strong>lớp cha và lớp con</strong></td>
+                  <td>Trong <strong>cùng một lớp</strong></td>
+                </tr>
+                <tr>
+                  <td>Tên phương thức</td>
+                  <td>Giống nhau</td>
+                  <td>Giống nhau</td>
+                </tr>
+                <tr>
+                  <td>Danh sách tham số</td>
+                  <td><strong>Phải giống hệt</strong></td>
+                  <td><strong>Phải khác nhau</strong></td>
+                </tr>
+                <tr>
+                  <td>Kiểu trả về</td>
+                  <td>Phải giống, hoặc lớp con của nó</td>
+                  <td>Có thể khác</td>
+                </tr>
+                <tr>
+                  <td>Quyết định khi nào</td>
+                  <td>Lúc chạy — runtime</td>
+                  <td>Lúc biên dịch — compile time</td>
+                </tr>
+                <tr>
+                  <td>Ví dụ</td>
+                  <td><code>Book.showInfo()</code> ghi đè <code>Product.showInfo()</code></td>
+                  <td><code>add(int,int)</code> và <code>add(double,double)</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>4.5 · Lưu ý</h3>
+          <div class="box warn">
+            <p class="box-title">⚠ Những chỗ dễ sai</p>
+            <ul style="margin-bottom:0">
+              <li><strong>Luôn viết <code>@Override</code>.</strong> Gõ nhầm tên hoặc sai tham số, trình biên dịch sẽ
+                báo lỗi ngay thay vì để bạn debug mò. Không có <code>@Override</code> thì Java coi đó là một phương thức
+                mới hoàn toàn.</li>
+              <li><strong>Sai tham số = overloading, không phải overriding.</strong> <code>showInfo(String s)</code> ở
+                lớp con <strong>không</strong> ghi đè <code>showInfo()</code> ở lớp cha.</li>
+              <li><strong>Không được thu hẹp phạm vi truy cập.</strong> Cha <code>public</code> thì con phải
+                <code>public</code>. Ngược lại, mở rộng thì được.</li>
+              <li><strong>Không ghi đè được <code>private</code>, <code>static</code>, <code>final</code>:</strong>
+                <code>private</code> lớp con không nhìn thấy; <code>static</code> viết lại chỉ là <em>che khuất</em> chứ
+                không phải override; <code>final</code> được đánh dấu cấm ghi đè.</li>
+              <li><strong>Muốn dùng lại logic của cha thì gọi <code>super.tenPhuongThuc()</code></strong> thay vì
+                copy-paste code.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ============ TỔNG KẾT ============ -->
+        <section id="tongket">
+          <h2><span class="num">05</span>Tổng kết</h2>
+
+          <div class="diagram">
+            <pre class="mermaid">
+graph TD
+    A["Quan he giua 2 lop"] --&gt; B{"Doc thu: A la mot B?"}
+    B --&gt;|Dung| C["Ke thua - IS-A<br/>class A extends B"]
+    B --&gt;|Sai| D{"Doc thu: A co mot B?"}
+    D --&gt;|Dung| E["HAS-A<br/>class A { private B b; }"]
+    D --&gt;|Sai| F["Hai lop khong lien quan"]
+  </pre>
+            <div class="cap">Quy trình quyết định khi đứng trước hai lớp bất kỳ.</div>
+          </div>
+
+          <div class="wrap-tbl">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Khái niệm</th>
+                  <th>Từ khóa</th>
+                  <th>Câu hỏi kiểm tra</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>HAS-A</td>
+                  <td>thuộc tính kiểu đối tượng</td>
+                  <td>"A <strong>có</strong> B"</td>
+                </tr>
+                <tr>
+                  <td>Mảng đối tượng</td>
+                  <td><code>Type[]</code>, <code>ArrayList&lt;Type&gt;</code></td>
+                  <td>"Nhiều B cùng loại"</td>
+                </tr>
+                <tr>
+                  <td>Kế thừa</td>
+                  <td><code>extends</code>, <code>super</code></td>
+                  <td>"A <strong>là một</strong> B"</td>
+                </tr>
+                <tr>
+                  <td>Ghi đè</td>
+                  <td><code>@Override</code></td>
+                  <td>"Con làm khác cha"</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ============ BÀI TẬP ============ -->
+        <section id="baitap">
+          <h2><span class="num">06</span>Bài tập luyện tập</h2>
+
+          <div class="ex-item">
+            <div class="ex-head">
+              <div class="ex-tag">BÀI 1</div>
+              <h3>Quan hệ HAS-A và mảng đối tượng</h3>
+            </div>
+            <div class="ex-body">
+              <p>Xây dựng hệ thống quản lý đơn hàng đơn giản:</p>
+              <ol>
+                <li>Lớp <code>Customer</code>: <code>name</code>, <code>phone</code>, <code>address</code> + constructor
+                  + getter.</li>
+                <li>Lớp <code>Product</code>: <code>id</code>, <code>name</code>, <code>price</code>,
+                  <code>quantity</code> (số lượng mua) + constructor + getter.</li>
+                <li>Lớp <code>Order</code>: <code>orderId</code>, một <code>Customer</code>, và một
+                  <code>Product[]</code> — dùng <strong>mảng thuần</strong>, kích thước tối đa 10.
+                  <ul>
+                    <li><code>addProduct(Product p)</code>: thêm sản phẩm vào ô trống tiếp theo.</li>
+                    <li><code>getTotal()</code>: tổng tiền = tổng của <code>price * quantity</code>.</li>
+                    <li><code>printInvoice()</code>: in hóa đơn gồm thông tin khách hàng, danh sách sản phẩm và tổng
+                      tiền.</li>
+                  </ul>
+                </li>
+                <li>Trong <code>main</code>, tạo 1 khách hàng, thêm 3 sản phẩm và in hóa đơn.</li>
+              </ol>
+            </div>
+            <div class="ex-hint">
+              <p class="box-title">Gợi ý hướng làm</p>
+              <ul>
+                <li>Ngoài mảng <code>Product[] items = new Product[10];</code> bạn cần thêm biến đếm
+                  <code>private int count = 0;</code> để biết đang có bao nhiêu sản phẩm thật. Đây chính là lý do
+                  <code>ArrayList</code> tồn tại.</li>
+                <li><code>addProduct</code> nên kiểm tra <code>if (count &lt; items.length)</code> trước khi gán, tránh
+                  <code>ArrayIndexOutOfBoundsException</code>.</li>
+                <li>Khi duyệt tính tổng, dùng <code>for (int i = 0; i &lt; count; i++)</code> chứ <strong>không</strong>
+                  dùng <code>items.length</code>, nếu không sẽ chạm vào các ô <code>null</code>.</li>
+                <li>Làm xong hãy thử viết lại <code>Order</code> bằng <code>List&lt;Product&gt;</code> và so sánh xem
+                  đoạn code nào ngắn hơn.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="ex-item">
+            <div class="ex-head">
+              <div class="ex-tag">BÀI 2</div>
+              <h3>Kế thừa và ghi đè</h3>
+            </div>
+            <div class="ex-body">
+              <p>Mở rộng hệ thống sản phẩm của cửa hàng:</p>
+              <ol>
+                <li>Lớp cha <code>Product</code>: <code>name</code>, <code>price</code>, phương thức
+                  <code>showInfo()</code> và <code>getFinalPrice()</code> (mặc định trả về <code>price</code>).</li>
+                <li>Ba lớp con:
+                  <ul>
+                    <li><code>Book</code>: thêm <code>author</code>, <code>pages</code>. Giá cuối <strong>giảm
+                        10%</strong> so với giá gốc.</li>
+                    <li><code>Electronic</code>: thêm <code>warrantyMonths</code>. Giá cuối = giá gốc <strong>cộng
+                        5%</strong> phí bảo hành.</li>
+                    <li><code>Food</code>: thêm <code>expiryDate</code> kiểu <code>String</code>. Giá cuối bằng giá gốc.
+                    </li>
+                  </ul>
+                </li>
+                <li>Mỗi lớp con ghi đè <code>showInfo()</code> để in thêm thông tin riêng, và ghi đè
+                  <code>getFinalPrice()</code>.</li>
+                <li>Trong <code>main</code>, tạo một <code>List&lt;Product&gt;</code> chứa cả 3 loại, duyệt qua và gọi
+                  <code>showInfo()</code> cùng <code>getFinalPrice()</code> cho từng phần tử.</li>
+              </ol>
+            </div>
+            <div class="ex-hint">
+              <p class="box-title">Gợi ý hướng làm</p>
+              <ul>
+                <li>Khai báo thuộc tính ở <code>Product</code> là <code>protected</code> để lớp con dùng trực tiếp
+                  <code>name</code>, <code>price</code>.</li>
+                <li>Constructor lớp con nhớ <code>super(name, price);</code> ở dòng đầu.</li>
+                <li>Trong <code>showInfo()</code> của lớp con, gọi <code>super.showInfo();</code> trước rồi mới in phần
+                  riêng — đỡ phải viết lại.</li>
+                <li><code>List&lt;Product&gt; list = new ArrayList&lt;&gt;();</code> rồi
+                  <code>list.add(new Book(...))</code> hoàn toàn hợp lệ, vì <code>Book</code> <strong>là một</strong>
+                  <code>Product</code>.</li>
+                <li>Quan sát: dù biến khai báo kiểu <code>Product</code>, Java vẫn gọi đúng <code>getFinalPrice()</code>
+                  của lớp con. Hãy tự giải thích tại sao trước buổi 7.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="ex-item">
+            <div class="ex-head">
+              <div class="ex-tag">BÀI 3</div>
+              <h3>Kết hợp HAS-A và kế thừa</h3>
+            </div>
+            <div class="ex-body">
+              <p>Xây dựng hệ thống tài khoản khách hàng của cửa hàng:</p>
+              <ol>
+                <li>Lớp <code>Address</code>: <code>street</code>, <code>city</code> + ghi đè <code>toString()</code>.
+                </li>
+                <li>Lớp cha <code>Account</code>: <code>username</code>, <code>email</code>, một đối tượng
+                  <code>Address</code> (<strong>HAS-A</strong>), phương thức <code>getDiscount()</code> trả về
+                  <code>0</code>.</li>
+                <li>Hai lớp con:
+                  <ul>
+                    <li><code>NormalAccount</code>: <code>getDiscount()</code> trả về <code>0.05</code> — 5%.</li>
+                    <li><code>VipAccount</code>: thêm thuộc tính <code>points</code>. <code>getDiscount()</code> trả về
+                      <code>0.15</code> nếu <code>points &gt;= 1000</code>, ngược lại trả về <code>0.10</code>.</li>
+                  </ul>
+                </li>
+                <li>Cả 3 lớp đều ghi đè <code>toString()</code> để in thông tin đầy đủ.</li>
+                <li>Trong <code>main</code>, tạo danh sách gồm 3 tài khoản khác loại, in ra mức giảm giá và tổng tiền
+                  phải trả cho một đơn hàng trị giá 2.000.000 VNĐ.</li>
+              </ol>
+            </div>
+            <div class="ex-hint">
+              <p class="box-title">Gợi ý hướng làm</p>
+              <ul>
+                <li>Đây là bài tổng hợp: <code>Account</code> <strong>có một</strong> <code>Address</code> (HAS-A), còn
+                  <code>VipAccount</code> <strong>là một</strong> <code>Account</code> (IS-A). Vẽ nhanh sơ đồ ra giấy
+                  trước khi code.</li>
+                <li>Trong <code>toString()</code> của <code>Account</code>, chỉ cần nối thêm <code>+ address</code> —
+                  Java tự gọi <code>address.toString()</code> mà bạn đã ghi đè.</li>
+                <li><code>getDiscount()</code> của <code>VipAccount</code> cần một câu <code>if</code> dựa trên
+                  <code>points</code>. Đây là ví dụ cho thấy lớp con có thể có logic phức tạp hơn cha.</li>
+                <li>Tính tiền: <code>2000000 * (1 - account.getDiscount())</code>.</li>
+                <li>Thử thêm: nếu <code>address</code> bị truyền <code>null</code> thì <code>toString()</code> in ra gì?
+                  Chạy thử để thấy Java in chữ <code>null</code> chứ không lỗi — nhưng <code>address.getCity()</code>
+                  thì lỗi ngay.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ CHUẨN BỊ ============ -->
+        <section id="chuanbi">
+          <footer>
+            <h2 style="margin-top:0"><span class="num">07</span>Chuẩn bị cho buổi 7</h2>
+            <p>Buổi sau sẽ học <strong>tính trừu tượng và đa hình</strong> — <code>abstract</code>,
+              <code>interface</code>. Trước khi tới lớp, hãy tự trả lời:</p>
+            <p class="qq">Ở bài 2, tại sao khi khai báo <code>Product p = new Book(...)</code> mà gọi
+              <code>p.showInfo()</code> thì lại chạy code của <code>Book</code> chứ không phải của <code>Product</code>?
+            </p>
+            <p>Và suy nghĩ thêm: nếu lớp <code>Product</code> chỉ dùng làm khuôn mẫu, không bao giờ tạo trực tiếp
+              <code>new Product(...)</code>, thì có cách nào <strong>cấm</strong> việc khởi tạo nó không?</p>
+            <p class="sig">CLB Tin học HIT · Lớp Java Public 2026 · Buổi 6</p>
+          </footer>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "base",
+      themeVariables: {
+        primaryColor: "#FFFFFF",
+        primaryTextColor: "#16233B",
+        primaryBorderColor: "#4A7A9B",
+        lineColor: "#4A7A9B",
+        fontFamily: "IBM Plex Mono, monospace",
+        fontSize: "13px"
+      }
+    });
+  </script>
+  <script>
+    // Tô màu cú pháp
+    if (window.hljs) { hljs.highlightAll(); }
+
+    // Nút sao chép code
+    document.querySelectorAll(".copy").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var code = btn.closest(".editor").querySelector("code").innerText;
+        navigator.clipboard.writeText(code).then(function () {
+          var old = btn.textContent;
+          btn.textContent = "Đã chép";
+          setTimeout(function () { btn.textContent = old; }, 1400);
+        });
+      });
+    });
+
+    // Mục lục bám theo vị trí đọc
+    var links = Array.prototype.slice.call(document.querySelectorAll(".toc a"));
+    var sections = links
+      .map(function (a) { return document.querySelector(a.getAttribute("href")); })
+      .filter(Boolean);
+
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        links.forEach(function (a) {
+          a.classList.toggle("on", a.getAttribute("href") === "#" + en.target.id);
+        });
+      });
+    }, { rootMargin: "-10% 0px -80% 0px" });
+
+    sections.forEach(function (s) { obs.observe(s); });
+  </script>
+
+</body>
+
+</html>
