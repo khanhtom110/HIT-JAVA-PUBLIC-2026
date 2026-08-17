@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buổi 7 — Trừu tượng, Đa hình, Interface, Abstract class, Xử lý ngoại lệ</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+<style>
+:root{
+  --ink:#16233B;
+  --ink-soft:#4A5A73;
+  --ink-faint:#8494AA;
+  --paper:#EDF0F4;
+  --surface:#FFFFFF;
+  --line:#D6DDE6;
+  --java-blue:#4A7A9B;
+  --java-blue-deep:#2F5C7A;
+  --java-orange:#E08A12;
+  --editor:#22293A;
+  --editor-bar:#1A2030;
+  --warn-bg:#FDF3E0;
+  --note-bg:#EAF1F6;
+
+  --f-display:"Be Vietnam Pro",system-ui,sans-serif;
+  --f-body:"Source Serif 4",Georgia,serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --w:min(760px,100%);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:17px;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+
+.shell{display:grid;grid-template-columns:250px 1fr;gap:0;max-width:1180px;margin:0 auto}
+
+/* ---------- Mục lục ---------- */
+.toc{
+  position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+  padding:40px 24px 40px 28px;
+  border-right:1px solid var(--line);
+  font-family:var(--f-display);
+}
+.toc-brand{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--java-blue);font-weight:700;margin-bottom:6px}
+.toc-title{font-size:15px;font-weight:800;line-height:1.35;margin:0 0 22px}
+.toc a{
+  display:block;text-decoration:none;color:var(--ink-soft);
+  font-size:13.5px;line-height:1.45;padding:6px 0 6px 14px;
+  border-left:2px solid transparent;transition:.18s;
+}
+.toc a:hover{color:var(--ink)}
+.toc a.on{color:var(--java-blue-deep);border-left-color:var(--java-orange);font-weight:600}
+.toc-sep{height:1px;background:var(--line);margin:14px 0}
+
+main{padding:0 40px 100px;min-width:0}
+.wrap{width:var(--w);margin:0 auto}
+
+/* ---------- Hero ---------- */
+header.hero{padding:64px 0 40px;border-bottom:1px solid var(--line);margin-bottom:44px}
+.eyebrow{font-family:var(--f-display);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--java-blue);font-weight:700}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,4.6vw,44px);line-height:1.16;letter-spacing:-.02em;margin:14px 0 18px}
+.lede{font-size:18px;color:var(--ink-soft);margin:0 0 26px;max-width:60ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  font-family:var(--f-mono);font-size:12px;padding:5px 11px;
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;color:var(--java-blue-deep);
+}
+
+.goals{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:26px 30px;margin:0 0 20px}
+.goals ol{margin:0;padding-left:22px}
+.goals li{margin-bottom:8px}
+
+/* ---------- Tiêu đề ---------- */
+section{scroll-margin-top:20px}
+h2{
+  font-family:var(--f-display);font-weight:800;font-size:27px;line-height:1.25;
+  letter-spacing:-.015em;margin:56px 0 18px;
+}
+h2 .num{
+  display:inline-block;font-family:var(--f-mono);font-size:13px;font-weight:600;
+  color:var(--java-orange);vertical-align:middle;margin-right:10px;
+  border:1px solid var(--java-orange);border-radius:3px;padding:2px 7px;
+}
+h3{font-family:var(--f-display);font-weight:700;font-size:19px;margin:36px 0 12px;letter-spacing:-.01em}
+h4{font-family:var(--f-display);font-weight:600;font-size:16px;margin:26px 0 10px;color:var(--ink-soft)}
+p{margin:0 0 16px}
+ul,ol{margin:0 0 18px;padding-left:24px}
+li{margin-bottom:7px}
+strong{font-weight:600;color:var(--ink)}
+code{font-family:var(--f-mono);font-size:.87em;background:#E2E8F0;padding:2px 5px;border-radius:3px;color:var(--java-blue-deep)}
+
+/* ---------- Khối code ---------- */
+.editor{margin:20px 0 24px;border-radius:5px;overflow:hidden;box-shadow:0 1px 3px rgba(22,35,59,.14)}
+.tab{
+  background:var(--editor-bar);display:flex;align-items:center;justify-content:space-between;
+  padding:0 12px 0 0;font-family:var(--f-mono);font-size:12px;
+}
+.tab .name{background:var(--editor);color:#C9D4E4;padding:9px 16px;border-top:2px solid var(--java-orange)}
+.tab .copy{background:none;border:none;color:#7A8AA3;font-family:var(--f-mono);font-size:11px;cursor:pointer;padding:6px 8px;letter-spacing:.04em}
+.tab .copy:hover{color:#C9D4E4}
+.editor pre{margin:0}
+.editor pre code.hljs{background:var(--editor);padding:18px 20px;font-size:13.5px;line-height:1.68;display:block;overflow-x:auto}
+.out{
+  margin:-24px 0 24px;background:var(--editor-bar);color:#9FB3C8;
+  font-family:var(--f-mono);font-size:12.5px;line-height:1.7;
+  padding:14px 20px;border-top:1px solid #313A4E;white-space:pre-wrap;border-radius:0 0 5px 5px;
+}
+.out .lbl{display:block;color:#5E6C82;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
+
+/* ---------- Hộp ---------- */
+.box{border-radius:4px;padding:20px 24px;margin:24px 0;border:1px solid var(--line);background:var(--surface)}
+.box > :last-child{margin-bottom:0}
+.box-title{font-family:var(--f-display);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+.warn{background:var(--warn-bg);border-color:#EFD9AE}
+.warn .box-title{color:#A96B06}
+.note{background:var(--note-bg);border-color:#C7DAE6}
+.note .box-title{color:var(--java-blue-deep)}
+.tip{border-left:3px solid var(--java-blue);background:var(--surface);padding-left:21px}
+.tip .box-title{color:var(--java-blue-deep)}
+.box h4{margin-top:18px;font-family:var(--f-display);font-size:14px;color:var(--ink);font-weight:700}
+.box h4:first-of-type{margin-top:0}
+
+/* ---------- Thẻ đôi ---------- */
+.decide{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:22px 24px;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+.card.a1::before{background:var(--java-blue)}
+.card.a2::before{background:var(--java-orange)}
+.card .k{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;color:var(--ink-faint);margin-bottom:6px}
+.card .q{font-family:var(--f-display);font-weight:800;font-size:19px;margin-bottom:12px;line-height:1.3}
+.card p{font-size:15px;color:var(--ink-soft);margin-bottom:12px}
+.card .ex{font-family:var(--f-mono);font-size:12.5px;color:var(--java-blue-deep);background:#F1F5F9;padding:8px 10px;border-radius:3px;line-height:1.6}
+
+/* ---------- Sơ đồ ---------- */
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:26px 20px;margin:24px 0;text-align:center;overflow-x:auto}
+.diagram .cap{font-family:var(--f-display);font-size:12.5px;color:var(--ink-faint);margin-top:16px}
+.mermaid{display:flex;justify-content:center}
+
+/* ---------- Bảng ---------- */
+.tbl{width:100%;border-collapse:collapse;margin:0;font-size:15px;background:var(--surface);border:1px solid var(--line)}
+.tbl th{font-family:var(--f-display);font-weight:700;font-size:13px;text-align:left;padding:12px 14px;background:#E4EAF1;border-bottom:1px solid var(--line)}
+.tbl td{padding:11px 14px;border-bottom:1px solid #E8EDF2;vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl td code{font-size:12.5px}
+.wrap-tbl{overflow-x:auto;margin:22px 0}
+.wrap-tbl .tbl{min-width:520px}
+
+/* ---------- Bài tập ---------- */
+.ex-item{background:var(--surface);border:1px solid var(--line);border-radius:4px;margin:24px 0;overflow:hidden}
+.ex-head{padding:20px 26px 0}
+.ex-tag{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;color:var(--java-orange);font-weight:600}
+.ex-head h3{margin:6px 0 14px;font-size:19px}
+.ex-body{padding:0 26px 6px}
+.ex-hint{background:#F4F7FA;border-top:1px solid var(--line);padding:18px 26px}
+.ex-hint .box-title{color:var(--java-blue-deep);margin-bottom:10px}
+.ex-hint ul{margin-bottom:0;font-size:15px}
+
+.sig{font-family:var(--f-mono);font-size:12px;color:var(--ink-faint);margin-top:56px;padding-top:26px;border-top:1px solid var(--line);letter-spacing:.03em}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .toc{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);padding:24px 22px}
+  .toc a{display:inline-block;border-left:none;border-bottom:2px solid transparent;padding:4px 10px 4px 0;margin-right:6px}
+  .toc a.on{border-left:none;border-bottom-color:var(--java-orange)}
+  main{padding:0 22px 70px}
+  .decide{grid-template-columns:1fr}
+  header.hero{padding:40px 0 32px}
+}
+
+@media print{
+  .toc,.tab .copy{display:none}
+  .shell{display:block}
+  body{background:#fff;font-size:11pt}
+  .editor pre code.hljs{background:#F4F6F8;color:#16233B}
+  .editor{box-shadow:none;border:1px solid #ccc}
+  .box,.ex-item,.diagram{break-inside:avoid}
+}
+a:focus-visible,button:focus-visible{outline:2px solid var(--java-orange);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+<nav class="toc" aria-label="Mục lục">
+  <div class="toc-brand">Java Public 2026</div>
+  <p class="toc-title">Buổi 7 — Trừu tượng, Đa hình, Interface, Ngoại lệ</p>
+  <a href="#muctieu">Mục tiêu buổi học</a>
+  <div class="toc-sep"></div>
+  <a href="#p1">1. Tính trừu tượng</a>
+  <a href="#p2">2. Tính đa hình</a>
+  <a href="#p3">3. Abstract class &amp; Interface</a>
+  <a href="#p4">4. Xử lý ngoại lệ</a>
+  <div class="toc-sep"></div>
+  <a href="#tongket">Tổng kết</a>
+  <a href="#baitap">Bài tập luyện tập</a>
+</nav>
+
+<main>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">Buổi 7</div>
+  <h1>Tính trừu tượng, Đa hình, Interface, Abstract class và Xử lý ngoại lệ</h1>
+  <p class="lede">Chủ đề xuyên suốt: hệ thống <strong>Cửa hàng bán hàng</strong> (<code>Product</code>, <code>Customer</code>, <code>Order</code>) — tiếp nối buổi 6.</p>
+  <div class="chips">
+    <span class="chip">abstract</span>
+    <span class="chip">interface</span>
+    <span class="chip">implements</span>
+    <span class="chip">instanceof</span>
+    <span class="chip">try-catch</span>
+    <span class="chip">throw / throws</span>
+  </div>
+</header>
+
+<section id="muctieu">
+  <div class="goals">
+    <h2 style="margin-top:0;font-size:22px"><span class="num">00</span>Mục tiêu buổi học</h2>
+    <p>Sau buổi này bạn sẽ:</p>
+    <ol>
+      <li>Hiểu <strong>tính trừu tượng</strong> và biết khi nào nên giấu bớt chi tiết đi.</li>
+      <li>Giải thích được <strong>tính đa hình</strong>: vì sao cùng một lời gọi <code>showInfo()</code> lại chạy code khác nhau.</li>
+      <li>Phân biệt và chọn đúng giữa <strong><code>abstract class</code></strong> và <strong><code>interface</code></strong>.</li>
+      <li>Bắt và ném được <strong>ngoại lệ</strong> bằng <code>try-catch-finally</code>, <code>throw</code>, <code>throws</code>, và tự viết được exception riêng.</li>
+    </ol>
+    <p style="margin-bottom:0;color:var(--ink-soft);font-size:15px"><strong>Cần có từ buổi trước:</strong> class, object, constructor, HAS-A, mảng đối tượng, <code>ArrayList</code>, kế thừa (<code>extends</code>, <code>super</code>), ghi đè (<code>@Override</code>).</p>
+  </div>
+</section>
+
+<!-- ============ PHẦN 1 ============ -->
+<section id="p1">
+<h2><span class="num">01</span>Tính trừu tượng</h2>
+
+<h3>1.1 · Khái niệm</h3>
+<p><strong>Tính trừu tượng</strong> là việc chỉ giữ lại những gì <strong>cần thiết</strong> và giấu đi chi tiết cài đặt bên trong.</p>
+<p>Ví dụ đời thường: khi bạn lái xe máy, bạn chỉ cần biết <strong>vặn ga thì xe chạy</strong>. Bạn không cần biết xăng được phun vào buồng đốt như thế nào. Cái tay ga là <strong>giao diện trừu tượng</strong>; động cơ là <strong>chi tiết cài đặt</strong> bị giấu đi.</p>
+
+<div class="box tip">
+  <p class="box-title">Tính trừu tượng trả lời câu hỏi</p>
+  <p style="margin-bottom:0"><strong>"Đối tượng này LÀM ĐƯỢC GÌ?"</strong> — chứ không phải "nó làm điều đó BẰNG CÁCH NÀO".</p>
+</div>
+
+<h3>1.2 · Vì sao cần trừu tượng?</h3>
+<p>Ở buổi 6 chúng ta có lớp <code>Product</code> với phương thức <code>getFinalPrice()</code>. Nhưng thử nghĩ kỹ:</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">Có hợp lý không?</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">Product p = new Product("But bi", 5000);</code></pre>
+</div>
+
+<p>Một "sản phẩm chung chung" thì có ý nghĩa gì? Trong cửa hàng thật, mọi món hàng đều phải thuộc <strong>một loại cụ thể</strong>: sách, đồ điện tử, thực phẩm. <code>Product</code> chỉ nên là <strong>khuôn mẫu</strong>, không nên tạo trực tiếp.</p>
+<p>Đó chính là câu hỏi mở cuối buổi 6. Java cho ta hai công cụ để làm việc này: <strong><code>abstract class</code></strong> và <strong><code>interface</code></strong>.</p>
+
+<h3>1.3 · Bốn tính chất của OOP</h3>
+<p>Đến đây bạn đã đủ 4 mảnh ghép:</p>
+<div class="wrap-tbl">
+<table class="tbl">
+  <thead><tr><th>Tính chất</th><th>Từ khóa liên quan</th><th>Ý nghĩa một câu</th></tr></thead>
+  <tbody>
+    <tr><td>Đóng gói — Encapsulation</td><td><code>private</code>, getter/setter</td><td>Giấu dữ liệu, chỉ cho truy cập qua cửa chính</td></tr>
+    <tr><td>Kế thừa — Inheritance</td><td><code>extends</code>, <code>super</code></td><td>Lớp con thừa hưởng lớp cha</td></tr>
+    <tr><td>Đa hình — Polymorphism</td><td><code>@Override</code></td><td>Một lời gọi, nhiều cách chạy</td></tr>
+    <tr><td>Trừu tượng — Abstraction</td><td><code>abstract</code>, <code>interface</code></td><td>Giấu chi tiết, chỉ lộ ra khả năng</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>1.4 · Lưu ý</h3>
+<div class="box warn">
+  <p class="box-title">⚠ Những chỗ dễ nhầm</p>
+  <ul style="margin-bottom:0">
+    <li><strong>Trừu tượng khác đóng gói.</strong> Đóng gói giấu <strong>dữ liệu</strong> (<code>private String name</code>). Trừu tượng giấu <strong>cách làm</strong> — bạn biết <code>getFinalPrice()</code> tồn tại, nhưng không cần biết công thức bên trong.</li>
+    <li><strong>Trừu tượng không phải là viết code phức tạp hơn.</strong> Mục đích cuối cùng là để người dùng lớp của bạn viết code <strong>đơn giản hơn</strong>.</li>
+    <li><strong>Đừng trừu tượng quá sớm.</strong> Với người mới, hãy viết class bình thường trước; khi thấy có từ 2-3 lớp lặp lại cùng một kiểu hành vi thì mới nghĩ tới <code>abstract</code> hay <code>interface</code>.</li>
+  </ul>
+</div>
+</section>
+
+<!-- ============ PHẦN 2 ============ -->
+<section id="p2">
+<h2><span class="num">02</span>Tính đa hình</h2>
+
+<h3>2.1 · Khái niệm</h3>
+<p><strong>Đa hình</strong> = "nhiều hình dạng". Cùng một lời gọi phương thức, nhưng kết quả khác nhau tùy theo <strong>đối tượng thật</strong> đang nằm sau biến đó.</p>
+<p>Ở buổi 6 bạn đã gặp hiện tượng này rồi:</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">Nhắc lại buổi 6</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">Product p1 = new Book("Clean Code", 450000, "Robert C. Martin", 464);
+Product p2 = new Electronic("Tai nghe Sony", 800000, 12);
+
+p1.showInfo();   // chay code cua Book
+p2.showInfo();   // chay code cua Electronic</code></pre>
+</div>
+
+<p>Cả hai biến đều <strong>khai báo</strong> kiểu <code>Product</code>, nhưng Java gọi đúng phiên bản của lớp con. Đây chính là câu hỏi mở cuối buổi 6, và câu trả lời nằm ở mục 2.3.</p>
+
+<h3>2.2 · Upcasting — gán đối tượng con vào biến cha</h3>
+
+<div class="editor">
+  <div class="tab"><span class="name">Upcasting</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">Book b = new Book("Clean Code", 450000, "Robert C. Martin", 464);
+Product p = b;              // Upcasting: tu dong, luon an toan</code></pre>
+</div>
+
+<p>Vì sao an toàn? Vì <code>Book</code> <strong>là một</strong> <code>Product</code> — quan hệ IS-A ở buổi 6. Mọi thứ mà <code>Product</code> hứa làm được thì <code>Book</code> cũng làm được.</p>
+<p>Nhờ upcasting, ta có thể gom mọi loại sản phẩm vào chung một danh sách:</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">Giỏ hàng nhiều loại</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">List&lt;Product&gt; cart = new ArrayList&lt;&gt;();
+cart.add(new Book("Clean Code", 450000, "Robert C. Martin", 464));
+cart.add(new Electronic("Tai nghe Sony", 800000, 12));
+cart.add(new Food("Banh quy", 45000, "2026-12-31"));
+
+for (Product p : cart) {
+    p.showInfo();           // moi phan tu tu in theo cach cua minh
+}</code></pre>
+</div>
+
+<div class="box note">
+  <p class="box-title">Sức mạnh thật sự của đa hình</p>
+  <p style="margin-bottom:0">Vòng lặp trên không cần biết trong giỏ có bao nhiêu loại hàng. Mai mốt thêm lớp <code>Clothing</code>, vòng lặp này <strong>không phải sửa một dòng nào</strong>.</p>
+</div>
+
+<h3>2.3 · Hai kiểu của một biến</h3>
+<div class="diagram">
+  <pre class="mermaid">
+graph LR
+    A["Product p = new Book(...)"] --&gt; B["Kieu KHAI BAO: Product<br/>quyet dinh GOI DUOC gi<br/>(compile time)"]
+    A --&gt; C["Kieu THUC TE: Book<br/>quyet dinh CHAY CODE nao<br/>(runtime)"]
+  </pre>
+  <div class="cap">Một biến mang hai kiểu cùng lúc, mỗi kiểu chi phối một chuyện khác nhau.</div>
+</div>
+
+<p>Ghi nhớ hai câu:</p>
+<ul>
+  <li><strong>Kiểu khai báo</strong> — bên trái dấu <code>=</code> — quyết định bạn được phép <strong>gọi phương thức nào</strong>.</li>
+  <li><strong>Kiểu thực tế</strong> — bên phải dấu <code>=</code> — quyết định <strong>code nào thực sự chạy</strong>.</li>
+</ul>
+
+<div class="editor">
+  <div class="tab"><span class="name">Thử nghiệm</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">Product p = new Book("Clean Code", 450000, "Robert C. Martin", 464);
+
+p.showInfo();      // OK - showInfo() co trong Product, chay ban cua Book
+p.showAuthor();    // LOI BIEN DICH - Product khong co phuong thuc showAuthor()</code></pre>
+</div>
+
+<p>Cơ chế "chọn code lúc chạy" này gọi là <strong>Dynamic Method Dispatch</strong> — điều phối phương thức động.</p>
+
+<h3>2.4 · Downcasting và toán tử instanceof</h3>
+<p>Muốn gọi <code>showAuthor()</code>, ta phải ép biến về lại kiểu <code>Book</code> — gọi là <strong>downcasting</strong>:</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">Downcasting an toàn</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">Product p = new Book("Clean Code", 450000, "Robert C. Martin", 464);
+
+if (p instanceof Book) {          // KIEM TRA truoc khi ep
+    Book b = (Book) p;            // Downcasting: phai ghi ro (Book)
+    b.showAuthor();
+}</code></pre>
+</div>
+
+<p>Từ Java 16 có cú pháp gọn hơn, gọi là <strong>pattern matching</strong>:</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">Pattern matching</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">if (p instanceof Book b) {        // vua kiem tra vua gan, khoi ep tay
+    b.showAuthor();
+}</code></pre>
+</div>
+
+<p>Ví dụ đầy đủ — thống kê giỏ hàng:</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">Main.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        List&lt;Product&gt; cart = new ArrayList&lt;&gt;();
+        cart.add(new Book("Clean Code", 450000, "Robert C. Martin", 464));
+        cart.add(new Electronic("Tai nghe Sony", 800000, 12));
+        cart.add(new Book("Effective Java", 520000, "Joshua Bloch", 412));
+
+        int bookCount = 0;
+        for (Product p : cart) {
+            p.showInfo();                        // da hinh
+            if (p instanceof Book) {             // kiem tra kieu that
+                bookCount++;
+            }
+        }
+        System.out.println("So dau sach: " + bookCount);
+    }
+}</code></pre>
+</div>
+
+<h3>2.5 · Đa hình lúc biên dịch và lúc chạy</h3>
+<div class="wrap-tbl">
+<table class="tbl">
+  <thead><tr><th></th><th>Compile-time Polymorphism</th><th>Runtime Polymorphism</th></tr></thead>
+  <tbody>
+    <tr><td>Còn gọi là</td><td>Overloading — nạp chồng</td><td>Overriding — ghi đè</td></tr>
+    <tr><td>Xảy ra ở</td><td>Cùng một lớp</td><td>Lớp cha ↔ lớp con</td></tr>
+    <tr><td>Quyết định khi</td><td>Lúc biên dịch</td><td>Lúc chạy chương trình</td></tr>
+    <tr><td>Ví dụ</td><td><code>add(int,int)</code> / <code>add(double,double)</code></td><td><code>Book.showInfo()</code> ghi đè <code>Product.showInfo()</code></td></tr>
+  </tbody>
+</table>
+</div>
+<p>Khi nói "đa hình" mà không nói rõ gì thêm, người ta thường ngụ ý <strong>runtime polymorphism</strong>.</p>
+
+<h3>2.6 · Lưu ý</h3>
+<div class="box warn">
+  <p class="box-title">⚠ Những chỗ dễ sai</p>
+  <ul style="margin-bottom:0">
+    <li><strong>Upcasting tự động, downcasting phải ghi rõ.</strong> <code>Product p = new Book(...)</code> không cần ép; <code>Book b = (Book) p</code> bắt buộc ghi <code>(Book)</code>.</li>
+    <li><strong>Downcasting sai kiểu ném <code>ClassCastException</code> lúc chạy.</strong> Đoạn <code>Product p = new Electronic(...); Book b = (Book) p;</code> biên dịch qua nhưng chạy là văng lỗi. <strong>Luôn kiểm tra bằng <code>instanceof</code> trước.</strong></li>
+    <li><strong>Đa hình chỉ hoạt động với phương thức được ghi đè, không áp dụng cho thuộc tính.</strong> Nếu lớp cha và lớp con cùng có biến <code>name</code>, thì <code>p.name</code> lấy theo <strong>kiểu khai báo</strong> chứ không phải kiểu thật.</li>
+    <li><strong><code>static</code> không có đa hình.</strong> Phương thức <code>static</code> được chọn theo kiểu khai báo lúc biên dịch.</li>
+    <li><strong>Nếu code của bạn đầy <code>if (p instanceof ...)</code>, đó là dấu hiệu thiết kế chưa tốt.</strong> Thay vì hỏi "nó là loại gì rồi làm thế này", hãy để mỗi lớp con tự ghi đè một phương thức chung.</li>
+  </ul>
+</div>
+</section>
+
+<!-- ============ PHẦN 3 ============ -->
+<section id="p3">
+<h2><span class="num">03</span>Abstract class và Interface</h2>
+
+<h3>3.1 · Abstract class — lớp trừu tượng</h3>
+<p>Quay lại vấn đề ở mục 1.2: ta không muốn ai tạo <code>new Product(...)</code> trực tiếp. Thêm từ khóa <code>abstract</code>:</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">Product.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public abstract class Product {
+    protected String name;
+    protected double price;
+
+    public Product(String name, double price) {   // abstract class VAN CO constructor
+        this.name = name;
+        this.price = price;
+    }
+
+    // Phuong thuc truu tuong: chi khai bao, KHONG co than ham, ket thuc bang dau ;
+    public abstract double getFinalPrice();
+
+    // Phuong thuc thuong: co san code, lop con dung luon
+    public void showInfo() {
+        System.out.println(name + " - Gia goc: " + price
+                         + " - Gia ban: " + getFinalPrice());
+    }
+
+    public String getName() { return name; }
+}</code></pre>
+</div>
+
+<p>Lớp con <strong>bắt buộc</strong> phải cài đặt các phương thức <code>abstract</code>:</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">Book.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public class Book extends Product {
+    private String author;
+
+    public Book(String name, double price, String author) {
+        super(name, price);
+        this.author = author;
+    }
+
+    @Override
+    public double getFinalPrice() {
+        return price * 0.9;          // sach giam 10%
+    }
+}</code></pre>
+</div>
+
+<div class="editor">
+  <div class="tab"><span class="name">Electronic.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public class Electronic extends Product {
+    private int warrantyMonths;
+
+    public Electronic(String name, double price, int warrantyMonths) {
+        super(name, price);
+        this.warrantyMonths = warrantyMonths;
+    }
+
+    @Override
+    public double getFinalPrice() {
+        return price * 1.05;         // cong 5% phi bao hanh
+    }
+}</code></pre>
+</div>
+
+<div class="editor">
+  <div class="tab"><span class="name">Main.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        // Product p = new Product("But bi", 5000);   // LOI: khong tao duoc abstract class
+
+        List&lt;Product&gt; cart = new ArrayList&lt;&gt;();
+        cart.add(new Book("Clean Code", 450000, "Robert C. Martin"));
+        cart.add(new Electronic("Tai nghe Sony", 800000, 12));
+
+        for (Product p : cart) {
+            p.showInfo();
+        }
+    }
+}</code></pre>
+</div>
+<div class="out"><span class="lbl">Kết quả chạy</span>Clean Code - Gia goc: 450000.0 - Gia ban: 405000.0
+Tai nghe Sony - Gia goc: 800000.0 - Gia ban: 840000.0</div>
+
+<h3>3.2 · Interface — giao diện</h3>
+<p><code>interface</code> là một <strong>bản hợp đồng</strong>: nó liệt kê những việc mà lớp nào ký vào cũng phải làm được, nhưng không quan tâm làm bằng cách nào.</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">Discountable.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public interface Discountable {
+    double applyDiscount(double percent);   // tu dong la public abstract
+}</code></pre>
+</div>
+
+<div class="editor">
+  <div class="tab"><span class="name">Shippable.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public interface Shippable {
+    double getWeight();
+    String getShippingAddress();
+}</code></pre>
+</div>
+
+<p>Một lớp dùng <code>implements</code> để "ký hợp đồng", và <strong>có thể ký nhiều hợp đồng cùng lúc</strong>:</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">Book.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public class Book extends Product implements Discountable, Shippable {
+    private String author;
+    private double weight;
+
+    public Book(String name, double price, String author, double weight) {
+        super(name, price);
+        this.author = author;
+        this.weight = weight;
+    }
+
+    @Override
+    public double getFinalPrice() {
+        return price * 0.9;
+    }
+
+    @Override
+    public double applyDiscount(double percent) {
+        return price * (1 - percent / 100);
+    }
+
+    @Override
+    public double getWeight() { return weight; }
+
+    @Override
+    public String getShippingAddress() { return "Kho Ha Noi"; }
+}</code></pre>
+</div>
+
+<div class="box note">
+  <p class="box-title">Giải quyết chuyện đa kế thừa</p>
+  <p style="margin-bottom:0">Ở buổi 6 ta biết Java không cho một lớp <code>extends</code> nhiều lớp. Interface chính là lời giải: một lớp chỉ <code>extends</code> được <strong>một</strong> lớp, nhưng <code>implements</code> được <strong>nhiều</strong> interface.</p>
+</div>
+
+<h3>3.3 · Sơ đồ tổng thể</h3>
+<div class="diagram">
+  <pre class="mermaid">
+classDiagram
+    class Product {
+        &lt;&lt;abstract&gt;&gt;
+        #String name
+        #double price
+        +showInfo() void
+        +getFinalPrice()* double
+    }
+    class Discountable {
+        &lt;&lt;interface&gt;&gt;
+        +applyDiscount(double) double
+    }
+    class Shippable {
+        &lt;&lt;interface&gt;&gt;
+        +getWeight() double
+    }
+    class Book {
+        -String author
+        +getFinalPrice() double
+        +applyDiscount(double) double
+        +getWeight() double
+    }
+    class Electronic {
+        -int warrantyMonths
+        +getFinalPrice() double
+        +getWeight() double
+    }
+    class Ebook {
+        -String fileFormat
+        +getFinalPrice() double
+    }
+    Product &lt;|-- Book
+    Product &lt;|-- Electronic
+    Product &lt;|-- Ebook
+    Discountable &lt;|.. Book
+    Shippable &lt;|.. Book
+    Shippable &lt;|.. Electronic
+  </pre>
+  <div class="cap">Nét liền là <code>extends</code>, nét đứt là <code>implements</code>.</div>
+</div>
+
+<p><code>Ebook</code> không cần <code>Shippable</code> vì sách điện tử không phải giao hàng — đó là lý do ta tách khả năng "giao hàng được" ra thành interface riêng thay vì nhét hết vào <code>Product</code>.</p>
+
+<h3>3.4 · So sánh Abstract class và Interface</h3>
+<div class="wrap-tbl">
+<table class="tbl">
+  <thead><tr><th>Tiêu chí</th><th><code>abstract class</code></th><th><code>interface</code></th></tr></thead>
+  <tbody>
+    <tr><td>Từ khóa dùng</td><td><code>extends</code></td><td><code>implements</code></td></tr>
+    <tr><td>Số lượng</td><td>Chỉ <strong>1</strong> lớp cha</td><td><strong>Nhiều</strong> interface</td></tr>
+    <tr><td>Thuộc tính</td><td>Đủ loại, có trạng thái riêng</td><td>Chỉ hằng <code>public static final</code></td></tr>
+    <tr><td>Constructor</td><td><strong>Có</strong></td><td><strong>Không</strong></td></tr>
+    <tr><td>Phương thức thường</td><td>Có</td><td>Có, nhưng phải là <code>default</code> hoặc <code>static</code></td></tr>
+    <tr><td>Phạm vi truy cập</td><td><code>private</code>, <code>protected</code>, <code>public</code></td><td>Mặc định <code>public</code></td></tr>
+    <tr><td>Ý nghĩa quan hệ</td><td><strong>IS-A</strong> — "là một"</td><td><strong>CAN-DO</strong> — "làm được việc"</td></tr>
+    <tr><td>Ví dụ</td><td><code>Book</code> <strong>là một</strong> <code>Product</code></td><td><code>Book</code> <strong>có thể</strong> <code>Discountable</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>3.5 · Chọn cái nào?</h3>
+<div class="diagram">
+  <pre class="mermaid">
+graph TD
+    A["Can dinh nghia mot nhom lop"] --&gt; B{"Cac lop co CHUNG du lieu<br/>va code khong?"}
+    B --&gt;|Co| C["abstract class<br/>chia se duoc thuoc tinh + code san"]
+    B --&gt;|Khong| D{"Chi muon quy dinh<br/>KHA NANG chung?"}
+    D --&gt;|Dung| E["interface<br/>mot lop ky duoc nhieu hop dong"]
+    C --&gt; F["Co the dung CA HAI:<br/>extends 1 lop + implements n interface"]
+    E --&gt; F
+  </pre>
+  <div class="cap">Quy trình quyết định khi thiết kế một nhóm lớp.</div>
+</div>
+
+<div class="decide">
+  <div class="card a1">
+    <div class="k">ABSTRACT CLASS</div>
+    <div class="q">Có dữ liệu và code dùng chung?</div>
+    <p>Các lớp con chia sẻ thuộc tính và phần code đã viết sẵn ở lớp cha.</p>
+    <div class="ex">class Book extends Product</div>
+  </div>
+  <div class="card a2">
+    <div class="k">INTERFACE</div>
+    <div class="q">Chỉ muốn quy định khả năng?</div>
+    <p>Nói rằng các lớp này đều <b>làm được</b> việc X, không quan tâm chúng là gì.</p>
+    <div class="ex">class Book implements Shippable</div>
+  </div>
+</div>
+
+<p>Quy tắc thực dụng cho người mới: có <strong>dữ liệu và code dùng chung</strong> giữa các lớp con → <strong><code>abstract class</code></strong>. Chỉ muốn nói "các lớp này đều <strong>làm được</strong> việc X" → <strong><code>interface</code></strong>. Còn phân vân → chọn <code>interface</code>, vì nó linh hoạt hơn.</p>
+
+<h3>3.6 · Phương thức default trong interface</h3>
+<p>Từ Java 8, interface được phép có phương thức <strong>có sẵn code</strong> bằng từ khóa <code>default</code>. Mục đích: thêm phương thức mới vào interface mà không làm vỡ các lớp đã <code>implements</code> từ trước.</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">Discountable.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public interface Discountable {
+    double applyDiscount(double percent);
+
+    default void printDiscountNote() {          // co than ham
+        System.out.println("San pham nay duoc ap dung khuyen mai.");
+    }
+}</code></pre>
+</div>
+
+<p>Lớp <code>implements</code> có thể dùng luôn hoặc ghi đè lại tùy ý.</p>
+
+<h3>3.7 · Lưu ý</h3>
+<div class="box warn">
+  <p class="box-title">⚠ Những chỗ dễ sai</p>
+
+  <h4>Về abstract class</h4>
+  <ul>
+    <li><strong>Không tạo được đối tượng:</strong> <code>new Product(...)</code> là lỗi biên dịch. Nhưng <code>Product p = new Book(...)</code> thì hợp lệ.</li>
+    <li><strong>Abstract class vẫn có constructor</strong>, dùng để lớp con gọi bằng <code>super(...)</code>.</li>
+    <li><strong>Phương thức <code>abstract</code> kết thúc bằng dấu <code>;</code>, không có <code>{}</code>.</strong> Viết <code>public abstract void showInfo() {}</code> là sai.</li>
+    <li><strong>Có phương thức <code>abstract</code> thì lớp bắt buộc phải <code>abstract</code>.</strong> Ngược lại, lớp <code>abstract</code> không nhất thiết phải có phương thức abstract nào.</li>
+    <li><strong>Lớp con phải cài đặt hết</strong> các phương thức abstract của cha, nếu không thì chính nó cũng phải khai báo <code>abstract</code>.</li>
+  </ul>
+
+  <h4>Về interface</h4>
+  <ul>
+    <li><strong>Không có constructor</strong>, không tạo được đối tượng trực tiếp.</li>
+    <li><strong>Mọi biến trong interface đều là <code>public static final</code></strong> — hằng số — dù bạn không ghi ra. Nên đừng dùng interface để lưu trạng thái.</li>
+    <li><strong>Mọi phương thức mặc định là <code>public abstract</code>.</strong> Khi lớp cài đặt, phải để <code>public</code>, không được thu hẹp thành <code>private</code>.</li>
+    <li><strong>Nhớ <code>@Override</code></strong> khi cài đặt phương thức của interface, để trình biên dịch kiểm tra hộ.</li>
+  </ul>
+
+  <h4>Chung</h4>
+  <ul style="margin-bottom:0">
+    <li><strong><code>extends</code> dùng cho lớp, <code>implements</code> dùng cho interface.</strong> Viết <code>class Book implements Product</code> khi <code>Product</code> là lớp là sai cú pháp.</li>
+    <li>Nếu dùng cả hai thì <code>extends</code> viết trước: <code>class Book extends Product implements Discountable</code>.</li>
+  </ul>
+</div>
+</section>
+
+<!-- ============ PHẦN 4 ============ -->
+<section id="p4">
+<h2><span class="num">04</span>Xử lý ngoại lệ</h2>
+
+<h3>4.1 · Ngoại lệ là gì?</h3>
+<p><strong>Ngoại lệ (exception)</strong> là một sự kiện bất thường xảy ra <strong>lúc chương trình đang chạy</strong>, làm luồng thực thi bình thường bị gián đoạn.</p>
+<p>Bạn đã gặp chúng nhiều lần ở buổi 6 rồi:</p>
+<ul>
+  <li><code>NullPointerException</code> — quên khởi tạo <code>ArrayList</code>.</li>
+  <li><code>ArrayIndexOutOfBoundsException</code> — truy cập <code>products[3]</code> trên mảng 3 phần tử.</li>
+</ul>
+<p>Không xử lý thì chương trình <strong>dừng đột ngột</strong> và in ra một đống chữ đỏ. Xử lý thì chương trình <strong>vẫn chạy tiếp</strong> và báo lỗi tử tế cho người dùng.</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">Chương trình chết giữa chừng</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">int[] arr = {1, 2, 3};
+System.out.println(arr[5]);
+System.out.println("Dong nay KHONG BAO GIO chay neu khong xu ly ngoai le");</code></pre>
+</div>
+
+<h3>4.2 · Phân loại ngoại lệ</h3>
+<div class="diagram">
+  <pre class="mermaid">
+graph TD
+    A["Throwable"] --&gt; B["Error<br/>loi he thong, khong xu ly"]
+    A --&gt; C["Exception"]
+    C --&gt; D["Checked Exception<br/>bat buoc xu ly luc bien dich"]
+    C --&gt; E["Unchecked Exception<br/>RuntimeException"]
+    D --&gt; D1["IOException<br/>SQLException<br/>FileNotFoundException"]
+    E --&gt; E1["NullPointerException<br/>ArithmeticException<br/>ArrayIndexOutOfBoundsException<br/>NumberFormatException"]
+  </pre>
+  <div class="cap">Cây phân cấp ngoại lệ trong Java.</div>
+</div>
+
+<div class="wrap-tbl">
+<table class="tbl">
+  <thead><tr><th>Loại</th><th>Đặc điểm</th><th>Nguyên nhân thường gặp</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Checked</strong></td><td>Trình biên dịch <strong>bắt buộc</strong> bạn xử lý, nếu không thì không build được</td><td>Yếu tố bên ngoài: đọc file, kết nối mạng, truy vấn database</td></tr>
+    <tr><td><strong>Unchecked</strong></td><td>Không bắt buộc, chương trình vẫn build được</td><td>Lỗi logic của lập trình viên: quên kiểm tra <code>null</code>, sai chỉ số, chia cho 0</td></tr>
+    <tr><td><strong>Error</strong></td><td>Lỗi nghiêm trọng của JVM, <strong>không nên bắt</strong></td><td><code>OutOfMemoryError</code>, <code>StackOverflowError</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>4.3 · Cấu trúc try-catch-finally</h3>
+<div class="editor">
+  <div class="tab"><span class="name">Main.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 3};
+
+        try {
+            System.out.println(arr[5]);           // nem ngoai le tai day
+            System.out.println("Dong nay bi bo qua");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Loi: chi so vuot qua kich thuoc mang");
+            System.out.println("Chi tiet: " + e.getMessage());
+        } finally {
+            System.out.println("Khoi finally LUON chay");
+        }
+
+        System.out.println("Chuong trinh tiep tuc binh thuong");
+    }
+}</code></pre>
+</div>
+<div class="out"><span class="lbl">Kết quả chạy</span>Loi: chi so vuot qua kich thuoc mang
+Chi tiet: Index 5 out of bounds for length 3
+Khoi finally LUON chay
+Chuong trinh tiep tuc binh thuong</div>
+
+<div class="wrap-tbl">
+<table class="tbl">
+  <thead><tr><th>Khối</th><th>Nhiệm vụ</th><th>Bắt buộc?</th></tr></thead>
+  <tbody>
+    <tr><td><code>try</code></td><td>Bọc đoạn code <strong>có thể</strong> sinh lỗi</td><td>Có</td></tr>
+    <tr><td><code>catch</code></td><td>Xử lý khi lỗi xảy ra</td><td>Cần ít nhất <code>catch</code> hoặc <code>finally</code></td></tr>
+    <tr><td><code>finally</code></td><td>Dọn dẹp, chạy <strong>dù có lỗi hay không</strong></td><td>Không</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>4.4 · Bắt nhiều loại ngoại lệ</h3>
+<div class="editor">
+  <div class="tab"><span class="name">Nhiều khối catch</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        try {
+            String input = "abc";
+            int quantity = Integer.parseInt(input);   // NumberFormatException
+            int total = 1000 / quantity;              // ArithmeticException
+            System.out.println(total);
+
+        } catch (NumberFormatException e) {
+            System.out.println("So luong phai la mot so nguyen");
+
+        } catch (ArithmeticException e) {
+            System.out.println("So luong khong duoc bang 0");
+
+        } catch (Exception e) {
+            System.out.println("Loi khong xac dinh: " + e.getMessage());
+        }
+    }
+}</code></pre>
+</div>
+
+<p>Từ Java 7, gộp được nhiều loại vào một <code>catch</code> bằng dấu <code>|</code>:</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">Gộp catch</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">try {
+    // ...
+} catch (NumberFormatException | ArithmeticException e) {
+    System.out.println("Du lieu nhap vao khong hop le");
+}</code></pre>
+</div>
+
+<h3>4.5 · throw và throws</h3>
+<div class="decide">
+  <div class="card a1">
+    <div class="k">THROW</div>
+    <div class="q">Ném ra ngoại lệ</div>
+    <p>Ném một đối tượng ngoại lệ ngay tại chỗ. Đứng <b>trong thân hàm</b>.</p>
+    <div class="ex">throw new Exception("...");<br>← có <b>new</b></div>
+  </div>
+  <div class="card a2">
+    <div class="k">THROWS</div>
+    <div class="q">Khai báo ngoại lệ</div>
+    <p>Báo rằng hàm này có thể ném loại ngoại lệ nào. Đứng ở <b>phần khai báo hàm</b>.</p>
+    <div class="ex">void checkout() throws Exception<br>← không có <b>new</b></div>
+  </div>
+</div>
+
+<div class="editor">
+  <div class="tab"><span class="name">Order.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public class Order {
+    private List&lt;Product&gt; items = new ArrayList&lt;&gt;();
+
+    public void addItem(Product p) {
+        if (p == null) {
+            throw new IllegalArgumentException("San pham khong duoc null");
+        }
+        items.add(p);
+    }
+
+    // Khai bao: ham nay CO THE nem ngoai le, nguoi goi phai lo
+    public void checkout(double customerBalance) throws Exception {
+        double total = getTotal();
+        if (customerBalance &lt; total) {
+            throw new Exception("So du khong du. Can them "
+                              + (total - customerBalance) + " VND");
+        }
+        System.out.println("Thanh toan thanh cong: " + total + " VND");
+    }
+
+    public double getTotal() {
+        double sum = 0;
+        for (Product p : items) sum += p.getFinalPrice();
+        return sum;
+    }
+}</code></pre>
+</div>
+
+<div class="editor">
+  <div class="tab"><span class="name">Main.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Order order = new Order();
+        order.addItem(new Book("Clean Code", 450000, "Robert C. Martin"));
+
+        try {
+            order.checkout(100000);        // khong du tien
+        } catch (Exception e) {
+            System.out.println("Thanh toan that bai: " + e.getMessage());
+        }
+    }
+}</code></pre>
+</div>
+
+<h3>4.6 · Tự tạo ngoại lệ riêng</h3>
+<p>Khi các exception có sẵn không diễn tả đúng vấn đề nghiệp vụ, hãy tự viết một lớp exception. Chỉ cần <code>extends Exception</code> (checked) hoặc <code>extends RuntimeException</code> (unchecked):</p>
+
+<div class="editor">
+  <div class="tab"><span class="name">OutOfStockException.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public class OutOfStockException extends Exception {
+    private String productName;
+
+    public OutOfStockException(String productName) {
+        super("San pham '" + productName + "' da het hang");
+        this.productName = productName;
+    }
+
+    public String getProductName() { return productName; }
+}</code></pre>
+</div>
+
+<div class="editor">
+  <div class="tab"><span class="name">Inventory.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public class Inventory {
+    public void sell(String productName, int stock, int quantity)
+            throws OutOfStockException {
+        if (quantity &gt; stock) {
+            throw new OutOfStockException(productName);
+        }
+        System.out.println("Da ban " + quantity + " " + productName);
+    }
+}</code></pre>
+</div>
+
+<div class="editor">
+  <div class="tab"><span class="name">Main.java</span><button class="copy">Sao chép</button></div>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        Inventory inv = new Inventory();
+        try {
+            inv.sell("Tai nghe Sony", 3, 5);
+        } catch (OutOfStockException e) {
+            System.out.println(e.getMessage());
+            System.out.println("Goi y: dat truoc san pham " + e.getProductName());
+        }
+    }
+}</code></pre>
+</div>
+<div class="out"><span class="lbl">Kết quả chạy</span>San pham 'Tai nghe Sony' da het hang
+Goi y: dat truoc san pham Tai nghe Sony</div>
+
+<h3>4.7 · Lưu ý</h3>
+<div class="box warn">
+  <p class="box-title">⚠ Những chỗ dễ sai</p>
+  <ul style="margin-bottom:0">
+    <li><strong>Thứ tự <code>catch</code> phải từ con đến cha.</strong> Đặt <code>catch (Exception e)</code> lên trước <code>catch (NumberFormatException e)</code> là lỗi biên dịch, vì <code>Exception</code> đã bắt hết rồi, khối sau không bao giờ tới lượt.</li>
+    <li><strong>Đừng nuốt ngoại lệ.</strong> Viết <code>catch (Exception e) {}</code> với thân rỗng là thói quen tệ nhất khi mới học — lỗi vẫn xảy ra nhưng bạn không hề biết. Ít nhất hãy in ra <code>e.getMessage()</code>.</li>
+    <li><strong>Đừng dùng <code>catch (Exception e)</code> cho mọi thứ.</strong> Bắt càng cụ thể càng dễ xử lý đúng và dễ đọc.</li>
+    <li><strong><code>finally</code> luôn chạy</strong>, kể cả khi trong <code>try</code> có <code>return</code>. Dùng nó để đóng file, đóng kết nối.</li>
+    <li><strong>Đừng dùng exception thay cho <code>if</code>.</strong> Kiểm tra <code>if (index &lt; arr.length)</code> nhanh và rõ hơn nhiều so với việc để nó văng lỗi rồi bắt.</li>
+    <li><strong><code>throw</code> ném một đối tượng, <code>throws</code> khai báo một kiểu.</strong> Nhớ: <code>throw new XyzException(...)</code> có <code>new</code>; <code>throws XyzException</code> không có <code>new</code>.</li>
+    <li><strong>Gọi phương thức có <code>throws</code> checked exception thì bắt buộc phải <code>try-catch</code> hoặc <code>throws</code> tiếp lên trên.</strong></li>
+    <li><strong>Luôn viết message có ích.</strong> <code>"Loi"</code> không giúp được ai. <code>"So du khong du. Can them 350000 VND"</code> thì có.</li>
+  </ul>
+</div>
+</section>
+
+<!-- ============ TỔNG KẾT ============ -->
+<section id="tongket">
+<h2><span class="num">05</span>Tổng kết</h2>
+
+<div class="diagram">
+  <pre class="mermaid">
+graph TD
+    A["Thiet ke lop"] --&gt; B{"Co du lieu + code dung chung?"}
+    B --&gt;|Co| C["abstract class"]
+    B --&gt;|Khong| D["interface"]
+    C --&gt; E["Lop con extends + @Override"]
+    D --&gt; E
+    E --&gt; F["Gom vao List kieu cha<br/>→ DA HINH"]
+    F --&gt; G["Boc phan de loi bang try-catch"]
+  </pre>
+  <div class="cap">Toàn bộ buổi 7 trong một luồng.</div>
+</div>
+
+<div class="wrap-tbl">
+<table class="tbl">
+  <thead><tr><th>Khái niệm</th><th>Từ khóa</th><th>Câu hỏi kiểm tra</th></tr></thead>
+  <tbody>
+    <tr><td>Trừu tượng</td><td><code>abstract</code></td><td>"Nó làm được gì?"</td></tr>
+    <tr><td>Đa hình</td><td><code>@Override</code>, upcasting</td><td>"Cùng lời gọi, khác kết quả"</td></tr>
+    <tr><td>Abstract class</td><td><code>extends</code></td><td>"A <strong>là một</strong> B, dùng chung code"</td></tr>
+    <tr><td>Interface</td><td><code>implements</code></td><td>"A <strong>làm được</strong> việc X"</td></tr>
+    <tr><td>Ngoại lệ</td><td><code>try-catch</code>, <code>throw</code>, <code>throws</code></td><td>"Nếu chỗ này lỗi thì sao?"</td></tr>
+  </tbody>
+</table>
+</div>
+</section>
+
+<!-- ============ BÀI TẬP ============ -->
+<section id="baitap">
+<h2><span class="num">06</span>Bài tập luyện tập</h2>
+
+<div class="ex-item">
+  <div class="ex-head">
+    <div class="ex-tag">BÀI 1</div>
+    <h3>Abstract class và đa hình</h3>
+  </div>
+  <div class="ex-body">
+    <p>Xây dựng hệ thống tính lương nhân viên cửa hàng:</p>
+    <ol>
+      <li>Lớp <code>abstract Employee</code>: <code>name</code>, <code>id</code>, phương thức <code>abstract double calculateSalary()</code> và phương thức thường <code>showInfo()</code> — in tên, mã và lương.</li>
+      <li>Ba lớp con:
+        <ul>
+          <li><code>FullTimeEmployee</code>: có <code>monthlySalary</code>. Lương = <code>monthlySalary</code>.</li>
+          <li><code>PartTimeEmployee</code>: có <code>hoursWorked</code> và <code>hourlyRate</code>. Lương = <code>hoursWorked * hourlyRate</code>.</li>
+          <li><code>SalesEmployee</code>: có <code>baseSalary</code> và <code>totalSales</code>. Lương = <code>baseSalary + totalSales * 0.03</code>.</li>
+        </ul>
+      </li>
+      <li>Trong <code>main</code>, tạo <code>List&lt;Employee&gt;</code> gồm 4 nhân viên khác loại, duyệt qua in thông tin và tính <strong>tổng quỹ lương</strong>.</li>
+      <li>Đếm xem có bao nhiêu nhân viên <code>SalesEmployee</code> bằng <code>instanceof</code>.</li>
+    </ol>
+  </div>
+  <div class="ex-hint">
+    <p class="box-title">Gợi ý hướng làm</p>
+    <ul>
+      <li><code>Employee</code> phải có từ khóa <code>abstract</code> ở cả lớp lẫn phương thức <code>calculateSalary()</code>. Phương thức abstract kết thúc bằng dấu <code>;</code>, không có <code>{}</code>.</li>
+      <li>Trong <code>showInfo()</code> của lớp cha, cứ gọi thẳng <code>calculateSalary()</code> — lúc chạy Java sẽ tự chọn đúng phiên bản của lớp con. Đây chính là đa hình.</li>
+      <li>Constructor lớp con nhớ <code>super(name, id);</code> ở dòng đầu.</li>
+      <li>Thử <code>new Employee("A", "E01")</code> xem trình biên dịch báo gì, để hiểu vì sao lớp abstract không tạo được đối tượng.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="ex-item">
+  <div class="ex-head">
+    <div class="ex-tag">BÀI 2</div>
+    <h3>Interface</h3>
+  </div>
+  <div class="ex-body">
+    <p>Bổ sung khả năng cho hệ thống sản phẩm:</p>
+    <ol>
+      <li>Interface <code>Discountable</code>: một phương thức <code>double applyDiscount(double percent)</code>.</li>
+      <li>Interface <code>Shippable</code>: hai phương thức <code>double getWeight()</code> và <code>double getShippingFee()</code>.</li>
+      <li>Lớp <code>abstract Product</code>: <code>name</code>, <code>price</code>, <code>abstract double getFinalPrice()</code>.</li>
+      <li>Ba lớp con:
+        <ul>
+          <li><code>Book extends Product implements Discountable, Shippable</code> — phí ship = <code>weight * 15000</code>.</li>
+          <li><code>Electronic extends Product implements Shippable</code> — phí ship = <code>weight * 20000</code>, không giảm giá.</li>
+          <li><code>Ebook extends Product implements Discountable</code> — không có phí ship vì là hàng số.</li>
+        </ul>
+      </li>
+      <li>Trong <code>main</code>, tạo <code>List&lt;Product&gt;</code> gồm cả 3 loại. Duyệt qua:
+        <ul>
+          <li>In giá cuối của mọi sản phẩm.</li>
+          <li>Nếu sản phẩm <code>instanceof Shippable</code> thì in thêm phí vận chuyển.</li>
+          <li>Nếu <code>instanceof Discountable</code> thì in giá sau khi giảm 20%.</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+  <div class="ex-hint">
+    <p class="box-title">Gợi ý hướng làm</p>
+    <ul>
+      <li>Thứ tự viết đúng là <code>extends</code> trước, <code>implements</code> sau: <code>class Book extends Product implements Discountable, Shippable</code>.</li>
+      <li>Trong vòng lặp, để gọi được <code>getShippingFee()</code> bạn phải ép kiểu: <code>if (p instanceof Shippable s) { s.getShippingFee(); }</code>. Chú ý là ép về <strong>interface</strong>, không phải về lớp con cụ thể — như vậy code không cần sửa khi thêm lớp mới.</li>
+      <li><code>Ebook</code> không <code>implements Shippable</code>, nên nó sẽ tự động bị bỏ qua ở nhánh phí ship. Đây là lý do ta tách khả năng thành interface riêng.</li>
+      <li>Nếu quên <code>@Override</code> một phương thức của interface, trình biên dịch sẽ báo lỗi ngay — hãy thử để thấy thông báo trông như thế nào.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="ex-item">
+  <div class="ex-head">
+    <div class="ex-tag">BÀI 3</div>
+    <h3>Xử lý ngoại lệ</h3>
+  </div>
+  <div class="ex-body">
+    <p>Xây dựng chức năng bán hàng có kiểm tra kho:</p>
+    <ol>
+      <li>Tự tạo hai lớp ngoại lệ:
+        <ul>
+          <li><code>OutOfStockException extends Exception</code> — nhận tên sản phẩm và số lượng còn lại.</li>
+          <li><code>InvalidQuantityException extends RuntimeException</code> — khi số lượng mua <code>&lt;= 0</code>.</li>
+        </ul>
+      </li>
+      <li>Lớp <code>Product</code>: <code>name</code>, <code>price</code>, <code>stock</code> — số lượng tồn kho.</li>
+      <li>Lớp <code>Store</code> với phương thức <code>double sell(Product p, int quantity) throws OutOfStockException</code>:
+        <ul>
+          <li>Nếu <code>quantity &lt;= 0</code> → <code>throw new InvalidQuantityException(...)</code>.</li>
+          <li>Nếu <code>quantity &gt; p.getStock()</code> → <code>throw new OutOfStockException(...)</code>.</li>
+          <li>Ngược lại: trừ kho, trả về tổng tiền.</li>
+        </ul>
+      </li>
+      <li>Trong <code>main</code>, gọi <code>sell()</code> với 4 tình huống: mua bình thường, mua số lượng 0, mua quá tồn kho, và mua âm. Bọc trong <code>try-catch</code> để chương trình <strong>chạy hết cả 4 lần</strong> mà không dừng giữa chừng.</li>
+      <li>Thêm khối <code>finally</code> in ra <code>"--- Ket thuc giao dich ---"</code> sau mỗi lần.</li>
+    </ol>
+  </div>
+  <div class="ex-hint">
+    <p class="box-title">Gợi ý hướng làm</p>
+    <ul>
+      <li>Lớp exception tự tạo chỉ cần một constructor gọi <code>super("thong bao loi")</code>. Muốn lấy thông báo đó ra thì dùng <code>e.getMessage()</code>.</li>
+      <li><code>OutOfStockException extends Exception</code> là <strong>checked</strong>, nên phương thức <code>sell()</code> bắt buộc phải có <code>throws OutOfStockException</code>, và nơi gọi bắt buộc phải <code>try-catch</code>. Còn <code>InvalidQuantityException extends RuntimeException</code> là <strong>unchecked</strong>, không cần khai báo — hãy so sánh xem trình biên dịch đối xử với hai loại này khác nhau thế nào.</li>
+      <li>Đặt <code>catch</code> cụ thể trước, <code>catch (Exception e)</code> sau cùng. Thử đảo ngược thứ tự để xem lỗi biên dịch.</li>
+      <li>Để chạy hết 4 tình huống, đặt mỗi lần gọi trong một <code>try-catch</code> riêng, hoặc cho cả 4 vào vòng lặp với <code>try-catch</code> bên trong thân vòng lặp.</li>
+      <li>Kiểm chứng <code>finally</code>: thêm <code>return</code> vào trong khối <code>try</code> rồi chạy lại, xem <code>finally</code> có còn in ra không.</li>
+    </ul>
+  </div>
+</div>
+
+<p class="sig">Lớp Java Public 2026 · Buổi 7</p>
+</section>
+
+</div>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/java.min.js"></script>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "base",
+    themeVariables: {
+      primaryColor: "#FFFFFF",
+      primaryTextColor: "#16233B",
+      primaryBorderColor: "#4A7A9B",
+      lineColor: "#4A7A9B",
+      fontFamily: "IBM Plex Mono, monospace",
+      fontSize: "13px"
+    }
+  });
+</script>
+<script>
+  if (window.hljs) { hljs.highlightAll(); }
+
+  document.querySelectorAll(".copy").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var code = btn.closest(".editor").querySelector("code").innerText;
+      navigator.clipboard.writeText(code).then(function () {
+        var old = btn.textContent;
+        btn.textContent = "Đã chép";
+        setTimeout(function () { btn.textContent = old; }, 1400);
+      });
+    });
+  });
+
+  var links = Array.prototype.slice.call(document.querySelectorAll(".toc a"));
+  var sections = links
+    .map(function (a) { return document.querySelector(a.getAttribute("href")); })
+    .filter(Boolean);
+
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      links.forEach(function (a) {
+        a.classList.toggle("on", a.getAttribute("href") === "#" + en.target.id);
+      });
+    });
+  }, { rootMargin: "-10% 0px -80% 0px" });
+
+  sections.forEach(function (s) { obs.observe(s); });
+</script>
+
+</body>
+</html>
